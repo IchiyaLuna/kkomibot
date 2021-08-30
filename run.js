@@ -87,9 +87,7 @@ client.on('interactionCreate', async interaction => {
             components: [commandersA, commandersB]
         });
     } else if (interaction.commandName === '유저') {
-        const content = interaction.content;
-        const contentArr = content.split(" ");
-        const nickname = contentArr[1];
+        const nickname = interaction.options;
         const encodeNickName = encodeURI(nickname);
         const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
         const $ = cheerio.load(html.data);
