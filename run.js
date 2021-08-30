@@ -40,26 +40,26 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on("message", async message => {
-    console.log(`test`);
-    if (message.content.startsWith(prefix)) {
-        const args = message.content.slice(prefix.length).split(" ");
-        const command = args.shift().toLowerCase();
 
-        if (command === "유저") {
-            const encodeNickName = encodeURI(nickname);
-            const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
-            const $ = cheerio.load(html.data);
-            const userName = $("span.profile-character-info__name").text();
-            const level = $("span.profile-character-info__lv").text();
-            const expedition = $("div.level-info__expedition > span").text();
-            const itemlevel = $("div.level-info2__expedition > span").text();
-            const job = $("img.profile-character-info__img").attr("alt");
+client.on('interactionCreate', async (message) => {
+    const content = message.content;
+    const contentArr = content.split(" ");
+    const command = contentArr[0];
+    const nickname = contentArr[1];
+    if (command === '!유저') {
+        const encodeNickName = encodeURI(nickname);
+        const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
+        const $ = cheerio.load(html.data);
+        const userName = $("span.profile-character-info__name").text();
+        const level = $("span.profile-character-info__lv").text();
+        const expedition = $("div.level-info__expedition > span").text();
+        const itemlevel = $("div.level-info2__expedition > span").text();
+        const job = $("img.profile-character-info__img").attr("alt");
 
-            await message.channel.send(`${userName}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
-        }
+        await message.channel.send(`${userName}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
     }
 });
+
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
