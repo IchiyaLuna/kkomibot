@@ -97,7 +97,7 @@ client.on('interactionCreate', async interaction => {
         const itemlevel = $("div.level-info2__expedition > span").text();
         const job = $("img.profile-character-info__img").attr("alt");
 
-        await message.channel.send(`${userName}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
+        await interaction.reply(`${userName}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
     }
 });
 
