@@ -1,6 +1,6 @@
 // Ext lib
 const axios = require('axios');
-
+const cheerio = require('cheerio');
 // Require the necessary discord.js classes
 const fs = require('fs');
 
