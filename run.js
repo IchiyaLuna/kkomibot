@@ -41,6 +41,7 @@ client.once('ready', () => {
 });
 
 client.on("message", async message => {
+    console.log(`test`);
     if (message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).split(" ");
         const command = args.shift().toLowerCase();
