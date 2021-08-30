@@ -19,10 +19,8 @@ const {
 
 // Create a new client instance
 const client = new Client({
-    intents: [Intents.FLAGS.GUILDS]
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 });
-
-const prefix = '!'; // 접두사
 
 // Load commands
 client.commands = new Collection();
@@ -40,8 +38,7 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-
-client.on('interactionCreate', async (message) => {
+client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
     const command = contentArr[0];
@@ -51,12 +48,38 @@ client.on('interactionCreate', async (message) => {
         const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
         const $ = cheerio.load(html.data);
         const userName = $("span.profile-character-info__name").text();
+        var server = $("span.profile-character-info__server").text();
+        server = server.substring(1, server.length);
         const level = $("span.profile-character-info__lv").text();
-        const expedition = $("div.level-info__expedition > span").text();
-        const itemlevel = $("div.level-info2__expedition > span").text();
+        var expedition = $("div.level-info__expedition > span").text();
+        expedition = expedition.substring(6, expedition.length);
+        var itemlevel = $("div.level-info2__expedition > span").text();
+        itemlevel = itemlevel.substring(9, itemlevel.length);
+        var title = $("div.game-info__title").text();
+        title = title.substring(2, itemlevel.length);
+        var guild = $("div.game-info__guild").text();
+        guild = guild.substring(2, itemlevel.length);
         const job = $("img.profile-character-info__img").attr("alt");
+        const jobimg = $("img.profile-character-info__img").attr("src");
 
-        await message.channel.send(`${userName}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
+        const userembed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('기본 정보')
+            .setURL(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`)
+            .setAuthor(userName, jobimg)
+            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`직업\`\` : ${job}\n\`\`길드\`\` : ${guild}\n\`\`칭호\`\` : ${title}\n`)
+            .setThumbnail(jobimg)
+            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}\n`, true)
+            .setTimestamp()
+            .setFooter('꼬미봇 by 아뀨');
+
+        if (userName == "") {
+            await message.channel.send("유저를 찾을 수 없습니다.");
+        } else {
+            await message.channel.send({
+                embeds: [userembed]
+            });
+        }
     }
 });
 
