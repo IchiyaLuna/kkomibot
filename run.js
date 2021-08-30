@@ -94,7 +94,7 @@ client.on('interactionCreate', async interaction => {
             .setColor("#e368cf")
             .setDescription("군단장 레이드 파티 간편 생성입니다.\n원하는 군단장을 선택하면 난이도를 고를 수 있습니다.")
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const commandersA = new MessageActionRow()
             .addComponents(
@@ -146,7 +146,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 발탄 파티 생성')
             .setDescription('군단장 발탄 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -173,7 +173,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 비아키스 파티 생성')
             .setDescription('군단장 비아키스 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -200,7 +200,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 쿠크세이튼 파티 생성')
             .setDescription('군단장 쿠크세이튼 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -231,7 +231,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 아브렐슈드 파티 생성')
             .setDescription('군단장 아브렐슈드 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -262,7 +262,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 일리아칸 파티 생성')
             .setDescription('군단장 일리아칸 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -289,7 +289,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 카멘 파티 생성')
             .setDescription('군단장 카멘 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -316,7 +316,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle('군단장 아브렐슈드 파티 생성')
             .setDescription('군단장 아브렐슈드 레이드의 난이도를 선택해주세요.\n*본 메시지는 본인에게만 보입니다.*')
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         const difficulty = new MessageActionRow()
             .addComponents(
@@ -347,7 +347,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 발탄 노말 파티를 모집중!`)
             .setDescription(`군단장 발탄 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -369,7 +369,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 발탄 하드 파티를 모집중!`)
             .setDescription(`군단장 발탄 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -391,7 +391,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 비아키스 노말 파티를 모집중!`)
             .setDescription(`군단장 비아키스 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -413,7 +413,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 비아키스 하드 파티를 모집중!`)
             .setDescription(`군단장 비아키스 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -435,7 +435,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 쿠크세이튼 리허설 파티 모집`)
             .setDescription(`군단장 쿠크세이튼 리허설 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -457,7 +457,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 쿠크세이튼 노말 파티를 모집중!`)
             .setDescription(`군단장 쿠크세이튼 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -479,7 +479,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 쿠크세이튼 하드 파티를 모집중!`)
             .setDescription(`군단장 쿠크세이튼 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -501,7 +501,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 아브렐슈드 데자뷰 파티 모집`)
             .setDescription(`군단장 아브렐슈드 데자뷰 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -523,7 +523,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 아브렐슈드 노말 파티를 모집중!`)
             .setDescription(`군단장 아브렐슈드 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -545,7 +545,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 아브렐슈드 하드 파티를 모집중!`)
             .setDescription(`군단장 아브렐슈드 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -567,7 +567,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 일리아칸 노말 파티를 모집중!`)
             .setDescription(`군단장 일리아칸 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -589,7 +589,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 일리아칸 하드 파티를 모집중!`)
             .setDescription(`군단장 일리아칸 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -611,7 +611,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 카멘 노말 파티를 모집중!`)
             .setDescription(`군단장 카멘 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
@@ -633,7 +633,7 @@ client.on('interactionCreate', async interaction => {
             .setTitle(`${interaction.member.displayName}가 카멘 하드 파티를 모집중!`)
             .setDescription(`군단장 카멘 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
-            .setFooter("꼬미봇");
+            .setFooter("꼬미봇 by 아뀨");
 
         interaction.update({
             content: "파티 생성이 완료되었습니다.",
