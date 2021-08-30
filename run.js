@@ -105,18 +105,6 @@ client.on('interactionCreate', async interaction => {
             embeds: [party_embed],
             components: [commandersA, commandersB]
         });
-    } else if (interaction.commandName === '유저') {
-        const nickname = interaction.options.getString('input');
-        const encodeNickName = encodeURI(nickname);
-        const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
-        const $ = cheerio.load(html.data);
-        const userName = $("span.profile-character-info__name").text();
-        const level = $("span.profile-character-info__lv").text();
-        const expedition = $("div.level-info__expedition > span").text();
-        const itemlevel = $("div.level-info2__expedition > span").text();
-        const job = $("img.profile-character-info__img").attr("alt");
-
-        await interaction.reply(`${nickname}의 원정대 레벨은 ${expedition}, 전투 레벨은 ${level}이고 직업은 ${job}, 아이템 레벨은 ${itemlevel}입니다.`);
     }
 });
 
