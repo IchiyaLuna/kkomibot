@@ -10,6 +10,7 @@ const {
     MessageActionRow,
     MessageButton,
     MessageEmbed,
+    Permissions,
     Intents
 } = require('discord.js');
 
@@ -38,11 +39,81 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+function checkBatchimEnding(word) {
+    if (typeof word !== 'string') return null;
+
+    var lastLetter = word[word.length - 1];
+    var uni = lastLetter.charCodeAt(0);
+
+    if (uni < 44032 || uni > 55203) return null;
+
+    return (uni - 44032) % 28 != 0;
+}
+
 client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
     const command = contentArr[0];
     const nickname = contentArr[1];
+
+    if (command === '!인증') {
+        const encodeNickName = encodeURI(nickname);
+        const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
+        const $ = cheerio.load(html.data);
+
+        const userName = $("span.profile-character-info__name").text();
+
+        var server = $("span.profile-character-info__server").text();
+        server = server.substring(1, server.length);
+
+        const level = $("span.profile-character-info__lv").text();
+
+        var TempArr = [];
+
+        $("div.level-info__expedition > span").each(function (i, elem) {
+            TempArr[i] = $(this).text();
+        });
+
+        const expedition = TempArr[1];
+
+        var TempArr = [];
+
+        $("div.level-info2__expedition > span").each(function (i, elem) {
+            TempArr[i] = $(this).text();
+        });
+
+        var itemlevel = TempArr[1];
+
+        var TempArr = [];
+
+        $("div.game-info__guild > span").each(function (i, elem) {
+            TempArr[i] = $(this).text();
+        });
+
+        var guild = TempArr[1];
+
+        const userembed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('인증 완료')
+            .setAuthor('쪼꼬미 길드 인증 시스템')
+            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`길드\`\` : ${guild}`)
+            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}`, true)
+            .setTimestamp()
+            .setFooter('정보 조회 - 꼬미봇 by 아뀨');
+
+        if (userName == "") {
+            await message.channel.send("유저를 찾을 수 없습니다.");
+        } else if (guild != "쪼꼬미" || server != "아브렐슈드") {
+            await message.channel.send("쪼꼬미 길드에 가입된 캐릭터만 인증할 수 있습니다.");
+        } else {
+            message.member.roles.add('881208641640890378');
+            message.member.setNickname(userName);
+
+            await message.channel.send({
+                embeds: [userembed]
+            });
+        }
+    }
     if (command === '!유저') {
         const encodeNickName = encodeURI(nickname);
         const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
@@ -62,23 +133,37 @@ client.on('messageCreate', async message => {
         const job = $("img.profile-character-info__img").attr("alt");
         const jobimg = $("img.profile-character-info__img").attr("src");
 
-        const basicability = [];
+        var wisdom = [];
+
+        $("div.game-info__wisdom > span").each(function (i, elem) {
+            wisdom[i] = $(this).text();
+        })
+
+        var basicability = [];
 
         $("div.profile-ability-basic > ul > li > span").each(function (i, elem) {
             basicability[i] = $(this).text();
+        });
+
+        var battleablility = [];
+
+        $("div.profile-ability-battle > ul > li > span").each(function (i, elem) {
+            battleablility[i] = $(this).text();
         });
 
         const userembed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('기본 정보')
             .setURL(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`)
-            .setAuthor(userName, jobimg)
+            .setAuthor(`${userName} - ${job}`, jobimg)
             .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`직업\`\` : ${job}\n\`\`길드\`\` : ${guild}\n\`\`칭호\`\` : ${title}`)
             .setThumbnail(jobimg)
+            .addField('영지 정보', `\`\`영지 이름\`\` : ${wisdom[2]}\n\`\`영지 레벨\`\` : ${wisdom[1]}`, false)
             .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}`, true)
+            .addField('전투 특성', `\`\`치명\`\` : ${battleablility[1]}\n\`\`특화\`\` : ${battleablility[3]}\n\`\`신속\`\` : ${battleablility[7]}`, true)
             .addField('기본 특성', `\`\`공격력\`\` : ${basicability[1]}\n\`\`최대 생명력\`\` : ${basicability[3]}`, true)
             .setTimestamp()
-            .setFooter('꼬미봇 by 아뀨');
+            .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
         if (userName == "") {
             await message.channel.send("유저를 찾을 수 없습니다.");
@@ -348,10 +433,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'vnormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 발탄 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 발탄 노말 파티를 모집중!`)
             .setDescription(`군단장 발탄 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -370,10 +457,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'vhard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 발탄 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 발탄 하드 파티를 모집중!`)
             .setDescription(`군단장 발탄 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -392,10 +481,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'bnormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 비아키스 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 비아키스 노말 파티를 모집중!`)
             .setDescription(`군단장 비아키스 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -414,10 +505,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'bhard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 비아키스 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 비아키스 하드 파티를 모집중!`)
             .setDescription(`군단장 비아키스 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -436,10 +529,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'rehearsal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 쿠크세이튼 리허설 파티 모집`)
+            .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 리허설 파티 모집`)
             .setDescription(`군단장 쿠크세이튼 리허설 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -458,10 +553,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'snormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 쿠크세이튼 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 노말 파티를 모집중!`)
             .setDescription(`군단장 쿠크세이튼 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -480,10 +577,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'shard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 쿠크세이튼 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 하드 파티를 모집중!`)
             .setDescription(`군단장 쿠크세이튼 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -502,10 +601,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'dejavu') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 아브렐슈드 데자뷰 파티 모집`)
+            .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 데자뷰 파티 모집`)
             .setDescription(`군단장 아브렐슈드 데자뷰 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -524,10 +625,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'anormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 아브렐슈드 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 노말 파티를 모집중!`)
             .setDescription(`군단장 아브렐슈드 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -546,10 +649,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'ahard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 아브렐슈드 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 하드 파티를 모집중!`)
             .setDescription(`군단장 아브렐슈드 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -568,10 +673,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'inormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 일리아칸 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 일리아칸 노말 파티를 모집중!`)
             .setDescription(`군단장 일리아칸 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -590,10 +697,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'ihard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 일리아칸 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 일리아칸 하드 파티를 모집중!`)
             .setDescription(`군단장 일리아칸 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -612,10 +721,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'knormal') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 카멘 노말 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 카멘 노말 파티를 모집중!`)
             .setDescription(`군단장 카멘 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -634,10 +745,12 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'khard') {
 
+        const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
         const embed = new MessageEmbed()
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
-            .setTitle(`${interaction.member.displayName}가 카멘 하드 파티를 모집중!`)
+            .setTitle(`${interaction.member.displayName}${adj} 카멘 하드 파티를 모집중!`)
             .setDescription(`군단장 카멘 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
