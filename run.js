@@ -62,14 +62,21 @@ client.on('messageCreate', async message => {
         const job = $("img.profile-character-info__img").attr("alt");
         const jobimg = $("img.profile-character-info__img").attr("src");
 
+        const basicability = [];
+
+        $("div.profile-ability-basic > ul > li > span").each(function (i, elem) {
+            basicability[i] = $(this).text();
+        });
+
         const userembed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('기본 정보')
             .setURL(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`)
             .setAuthor(userName, jobimg)
-            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`직업\`\` : ${job}\n\`\`길드\`\` : ${guild}\n\`\`칭호\`\` : ${title}\n`)
+            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`직업\`\` : ${job}\n\`\`길드\`\` : ${guild}\n\`\`칭호\`\` : ${title}`)
             .setThumbnail(jobimg)
-            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}\n`, true)
+            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}`, true)
+            .addField('기본 특성', `\`\`공격력\`\` : ${basicability[1]}\n\`\`최대 생명력\`\` : ${basicability[3]}`, true)
             .setTimestamp()
             .setFooter('꼬미봇 by 아뀨');
 
