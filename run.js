@@ -115,6 +115,7 @@ client.on('messageCreate', async message => {
             await message.channel.send("쪼꼬미 길드에 가입된 캐릭터만 인증할 수 있습니다.");
         } else {
             message.member.roles.add('881208641640890378');
+            message.member.roles.remove('882140536075599872')
             message.member.setNickname(userName);
 
             await message.channel.send({
