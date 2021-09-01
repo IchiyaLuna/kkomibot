@@ -62,10 +62,28 @@ client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
     const command = contentArr[0];
-    const nickname = contentArr[1];
+    const parameter = contentArr[1];
 
-    if (command === '!인증') {
-        const encodeNickName = encodeURI(nickname);
+    if (command === '!공지') {
+        if (message.member.roles.cache.has('882486032841453678')) {
+            let today = new Date();
+
+            const alertembed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(`${today.getMonth() + 1}월 ${today.getDate()}일 꼬미봇 안내`)
+                .setDescription(`${message.content.substring(3, message.content.length)}`)
+                .setTimestamp()
+                .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
+
+            channel = client.channels.cache.get('882485876075167806');
+            channel.send({
+                embeds: [alertembed]
+            });
+        } else {
+            await message.channel.send("관리자만 수행할 수 있습니다.");
+        }
+    } else if (command === '!인증') {
+        const encodeNickName = encodeURI(parameter);
         const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
         const $ = cheerio.load(html.data);
 
@@ -122,9 +140,8 @@ client.on('messageCreate', async message => {
                 embeds: [userembed]
             });
         }
-    }
-    if (command === '!유저') {
-        const encodeNickName = encodeURI(nickname);
+    } else if (command === '!유저') {
+        const encodeNickName = encodeURI(parameter);
         const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
         const $ = cheerio.load(html.data);
         const userName = $("span.profile-character-info__name").text();
