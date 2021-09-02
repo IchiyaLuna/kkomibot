@@ -384,7 +384,8 @@ client.on('messageCreate', async message => {
         }
 
         if (voicechannel.id == message.guild.me.voice.channel.id) {
-            getVoiceConnection(message.guild.id).disconnect();
+            await getVoiceConnection(message.guild.id).disconnect();
+            await message.channel.send("꼬미봇 플레이어를 종료합니다.");
         } else {
             return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
         }
