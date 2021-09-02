@@ -21,20 +21,25 @@ const {
 
 const {
     Client,
+    VoiceChannel,
     Collection,
     MessageActionRow,
     MessageButton,
     MessageEmbed,
+    Permissions,
     Intents
 } = require('discord.js');
 
 const {
     token
 } = require('./config.json');
+const {
+    filter
+} = require('cheerio/lib/api/traversing');
 
 // Create a new client instance
 const client = new Client({
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]
 });
 
 // Load commands
@@ -48,13 +53,12 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-client.user.setActivity('쪼꼬미들의 목소리를', {
-    type: 'LISTENING'
-});
-
 // Bot login message
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    client.user.setActivity('쪼꼬미들의 목소리를', {
+        type: 'LISTENING'
+    });
 });
 
 function checkBatchimEnding(word) {
@@ -266,7 +270,100 @@ client.on('messageCreate', async message => {
         }
     } else if (command === "!재생") {
         const voicechannel = message.member.voice.channel;
-        if (!voicechannel) return message.channel.send("우선 음성 채널에 참여해야 합니다.");
+
+        if (!voicechannel) {
+            return message.channel.send("우선 음성 채널에 참여해야 합니다.");
+        }
+
+        try {
+            const searchkeyword = message.content.substring(3, message.content.length);
+
+            var urls = [];
+            var embedcontent = "";
+
+            const videos = await youtube.searchVideos(searchkeyword, 5);
+
+            if (videos.length < 5) return message.channel.send('충분한 노래를 검색하지 못했습니다.');
+
+            for (let i = 0; i < videos.length; i++) {
+                urls[i] = videos[i].url;
+                embedcontent += `**${i + 1} :** ${videos[i].title}\n`;
+            }
+
+            const musicselectembed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(`검색된 음악 리스트`)
+                .setDescription(`${embedcontent}`)
+                .addField('사용법', '원하는 노래의 \`\`숫자\`\`만 입력하세요. 취소는 아무거나 입력하세요.')
+                .setTimestamp()
+                .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+            const filter = m => m.author.id === message.author.id;
+
+            message.channel.send({
+                    embeds: [musicselectembed]
+                })
+                .then(sentMessage => {
+                    message.channel.awaitMessages({
+                            filter,
+                            max: 1,
+                            time: 10000,
+                            errors: ['time']
+                        })
+                        .then(collected => {
+                            answer = collected.first(1);
+                            collected.each(message => message.delete());
+                            sentMessage.delete();
+
+                            selectnum = parseInt(answer);
+
+                            if (selectnum >= 1 && selectnum <= 5) {
+
+                                const connection = joinVoiceChannel({
+                                    channelId: voicechannel.id,
+                                    guildId: message.guild.id,
+                                    adapterCreator: message.guild.voiceAdapterCreator
+                                });
+
+                                const stream = ytdl(urls[selectnum - 1], {
+                                    filter: 'audioonly'
+                                });
+
+                                const resource = createAudioResource(stream, {
+                                    inputType: StreamType.Arbitrary
+                                });
+
+                                const player = createAudioPlayer();
+
+                                player.play(resource);
+
+                                connection.subscribe(player);
+
+                                player.on(AudioPlayerStatus.Idle, () => connection.destroy());
+
+                                const musicselectembed = new MessageEmbed()
+                                    .setColor('#0099ff')
+                                    .setTitle(`${videos[selectnum - 1].title}`)
+                                    .setDescription(`${videos[selectnum - 1].description}`)
+                                    .setTimestamp()
+                                    .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+                                message.channel.send({
+                                    embeds: [musicselectembed]
+                                });
+                            } else {
+                                message.channel.send(`재생이 취소되었습니다.`);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            message.channel.send("시간이 초과되었습니다.");
+                        });
+                });
+        } catch (err) {
+            console.log(err);
+            return message.channel.send("노래를 불러오는 과정에서 오류가 발생했습니다.");
+        }
     }
 });
 
