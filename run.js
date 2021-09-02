@@ -12,6 +12,7 @@ const youtube = new Youtube(youtubeAPI);
 const fs = require('fs');
 
 const {
+    VoiceConnectionStatus,
     AudioPlayerStatus,
     StreamType,
     createAudioPlayer,
