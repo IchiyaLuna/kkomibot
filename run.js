@@ -357,7 +357,7 @@ client.on('messageCreate', async message => {
                                     .setColor('#0099ff')
                                     .setTitle(`${videos[selectnum - 1].title}`)
                                     .setDescription(`${videos[selectnum - 1].description}`)
-                                    .setImage(videos[selectnum - 1].thumbnails.default)
+                                    .setImage(videos[selectnum - 1].thumbnails.default.url)
                                     .setTimestamp()
                                     .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
 
