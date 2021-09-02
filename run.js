@@ -1,6 +1,13 @@
 // Ext lib
 const axios = require('axios');
 const cheerio = require('cheerio');
+const Youtube = require('simple-youtube-api');
+const ytdl = require('ytdl-core');
+const {
+    youtubeAPI
+} = require('./config.json');
+const youtube = new Youtube(youtubeAPI);
+
 // Require the necessary discord.js classes
 const fs = require('fs');
 
@@ -10,7 +17,6 @@ const {
     MessageActionRow,
     MessageButton,
     MessageEmbed,
-    Permissions,
     Intents
 } = require('discord.js');
 
@@ -246,6 +252,8 @@ client.on('messageCreate', async message => {
                 embeds: [userembed]
             });
         }
+    } else if (command === "!재생") {
+
     }
 });
 
