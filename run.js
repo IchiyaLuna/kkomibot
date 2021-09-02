@@ -35,12 +35,7 @@ const {
 const {
     token
 } = require('./config.json');
-const {
-    filter
-} = require('cheerio/lib/api/traversing');
-const {
-    resourceUsage
-} = require('process');
+
 
 // Create a new client instance
 const client = new Client({
@@ -89,6 +84,14 @@ const player = createAudioPlayer({
     behaviors: {
         noSubscriber: NoSubscriberBehavior.Stop,
     },
+});
+
+connection.on('stateChange', (oldState, newState) => {
+    console.log(`Connection transitioned from ${oldState.status} to ${newState.status}`);
+});
+
+player.on('stateChange', (oldState, newState) => {
+    console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
 });
 
 client.on('messageCreate', async message => {
@@ -346,8 +349,6 @@ client.on('messageCreate', async message => {
                                 });
 
                                 resource.volume.setVolume(0.5);
-
-
 
                                 player.play(resource);
 
