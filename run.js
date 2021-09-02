@@ -265,7 +265,8 @@ client.on('messageCreate', async message => {
             });
         }
     } else if (command === "!재생") {
-
+        const voicechannel = message.member.voice.channel;
+        if (!voicechannel) return message.channel.send("우선 음성 채널에 참여해야 합니다.");
     }
 });
 
