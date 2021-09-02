@@ -495,7 +495,7 @@ client.on('messageCreate', async message => {
 
                                 LastConnection = connection;
 
-                                await playMusic(connection, message);
+                                playMusic(connection, message);
                             } else {
                                 message.channel.send(`재생이 취소되었습니다.`);
                             }
