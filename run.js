@@ -85,6 +85,12 @@ function isEmpty(str) {
         return false;
 }
 
+const player = createAudioPlayer({
+    behaviors: {
+        noSubscriber: NoSubscriberBehavior.Stop,
+    },
+});
+
 client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
@@ -341,11 +347,7 @@ client.on('messageCreate', async message => {
 
                                 resource.volume.setVolume(0.5);
 
-                                const player = createAudioPlayer({
-                                    behaviors: {
-                                        noSubscriber: NoSubscriberBehavior.Stop,
-                                    },
-                                });
+
 
                                 player.play(resource);
 
@@ -385,7 +387,7 @@ client.on('messageCreate', async message => {
         }
 
         if (voicechannel.id == message.guild.me.voice.channel.id) {
-            await getVoiceConnection(message.guild.id).disconnect();
+            await player.stop();
             await message.channel.send("꼬미봇 플레이어를 종료합니다.");
         } else {
             return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
