@@ -12,6 +12,14 @@ const youtube = new Youtube(youtubeAPI);
 const fs = require('fs');
 
 const {
+    AudioPlayerStatus,
+    StreamType,
+    createAudioPlayer,
+    createAudioResource,
+    joinVoiceChannel,
+} = require('@discordjs/voice');
+
+const {
     Client,
     Collection,
     MessageActionRow,
@@ -39,6 +47,10 @@ for (const file of commandFiles) {
     // With the key as the command name and the value as the exported module
     client.commands.set(command.data.name, command);
 }
+
+client.user.setActivity('쪼꼬미들의 목소리를', {
+    type: 'LISTENING'
+});
 
 // Bot login message
 client.once('ready', () => {
