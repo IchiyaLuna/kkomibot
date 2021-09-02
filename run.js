@@ -17,6 +17,8 @@ const {
     createAudioPlayer,
     createAudioResource,
     joinVoiceChannel,
+    NoSubscriberBehavior,
+    getVoiceConnection
 } = require('@discordjs/voice');
 
 const {
@@ -339,7 +341,11 @@ client.on('messageCreate', async message => {
 
                                 resource.volume.setVolume(0.5);
 
-                                const player = createAudioPlayer();
+                                const player = createAudioPlayer({
+                                    behaviors: {
+                                        noSubscriber: NoSubscriberBehavior.Stop,
+                                    },
+                                });
 
                                 player.play(resource);
 
@@ -369,6 +375,18 @@ client.on('messageCreate', async message => {
         } catch (err) {
             console.log(err);
             return message.channel.send("노래를 불러오는 과정에서 오류가 발생했습니다.");
+        }
+    } else if (command === "!나가") {
+        const voicechannel = message.member.voice.channel;
+
+        if (!voicechannel) {
+            return message.channel.send("우선 음성 채널에 참여해야 합니다.");
+        }
+
+        if (voicechannel.id == message.guild.me.voice.channel.id) {
+            getVoiceConnection(message.guild.id).disconnect();
+        } else {
+            return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
         }
     }
 });
