@@ -36,6 +36,9 @@ const {
 const {
     filter
 } = require('cheerio/lib/api/traversing');
+const {
+    resourceUsage
+} = require('process');
 
 // Create a new client instance
 const client = new Client({
@@ -330,8 +333,11 @@ client.on('messageCreate', async message => {
                                 });
 
                                 const resource = createAudioResource(stream, {
-                                    inputType: StreamType.Arbitrary
+                                    inputType: StreamType.Arbitrary,
+                                    inlineVolume: true
                                 });
+
+                                resource.volume.setVolume(0.5);
 
                                 const player = createAudioPlayer();
 
