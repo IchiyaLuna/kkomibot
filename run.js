@@ -12,6 +12,7 @@ const youtube = new Youtube(youtubeAPI);
 const fs = require('fs');
 
 const {
+    VoiceConnection,
     VoiceConnectionStatus,
     AudioPlayerStatus,
     StreamType,
@@ -81,15 +82,154 @@ function isEmpty(str) {
         return false;
 }
 
-const player = createAudioPlayer({
-    behaviors: {
-        noSubscriber: NoSubscriberBehavior.Stop,
-    },
+var MusicData = {
+    queue: [],
+    isPlaying: false,
+    QueueLock: false
+};
+
+var LastConnection;
+
+const MusicPlayer = createAudioPlayer();
+
+MusicPlayer.on('stateChange', (oldState, newState) => {
+    console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
+    if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
+        processQueue();
+    }
 });
 
-player.on('stateChange', (oldState, newState) => {
-    console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
-});
+async function processQueue() {
+    if (MusicData.QueueLock || MusicPlayer.state.status !== AudioPlayerStatus.Idle || MusicData.queue.length === 0) {
+        return;
+    }
+
+    MusicData.QueueLock = true;
+
+    const nextTrack = MusicData.queue.shift();
+
+    try {
+        const stream = ytdl(nextTrack.url, {
+            filter: 'audioonly'
+        });
+
+        const resource = await createAudioResource(stream, {
+            inputType: StreamType.Arbitrary,
+            inlineVolume: true
+        });
+
+        resource.volume.setVolume(0.5);
+
+        MusicPlayer.play(resource);
+
+        const nowplaying = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(`지금 재생중 - ${nextTrack.title}`)
+            .setDescription(`${nextTrack.desc}`)
+            .setImage(nextTrack.thumbnail)
+            .setTimestamp()
+            .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+        if (MusicData.queue[0]) {
+            nowplaying.addField('다음곡', MusicData.queue[0].title);
+        }
+
+        nextTrack.message.channel.send({
+            embeds: [nowplaying]
+        });
+
+        MusicData.QueueLock = false;
+    } catch (error) {
+        console.log(error);
+        MusicData.QueueLock = false;
+        return processQueue();
+    }
+}
+async function playMusic(connection, message) {
+    const voicechannel = message.member.voice.channel;
+
+    if (MusicPlayer.state.status !== AudioPlayerStatus.Playing) {
+        if (MusicData.queue[0]) {
+            const nextTrack = MusicData.queue.shift();
+
+            const stream = ytdl(nextTrack.url, {
+                filter: 'audioonly'
+            });
+
+            const resource = await createAudioResource(stream, {
+                inputType: StreamType.Arbitrary,
+                inlineVolume: true
+            });
+
+            resource.volume.setVolume(0.5);
+
+            MusicPlayer.play(resource);
+
+            connection.subscribe(MusicPlayer);
+
+            const nowplaying = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(`지금 재생중 - ${nextTrack.title}`)
+                .setDescription(`${nextTrack.desc}`)
+                .setImage(nextTrack.thumbnail)
+                .setTimestamp()
+                .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+            await message.channel.send({
+                embeds: [nowplaying]
+            });
+        }
+    } else if (voicechannel.id != message.guild.me.voice.channel.id) {
+        const LastAdded = MusicData.queue[MusicData.queue.length - 1];
+
+        MusicData.queue = [];
+
+        MusicData.queue.push(LastAdded);
+
+        const nextTrack = MusicData.queue.shift();
+
+        const stream = ytdl(nextTrack.url, {
+            filter: 'audioonly'
+        });
+
+        const resource = await createAudioResource(stream, {
+            inputType: StreamType.Arbitrary,
+            inlineVolume: true
+        });
+
+        resource.volume.setVolume(0.5);
+
+        MusicPlayer.play(resource);
+
+        connection.subscribe(MusicPlayer);
+
+        const nowplaying = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(`지금 재생중 - ${nextTrack.title}`)
+            .setDescription(`${nextTrack.desc}`)
+            .setImage(nextTrack.thumbnail)
+            .setTimestamp()
+            .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+        await message.channel.send({
+            embeds: [nowplaying]
+        });
+    } else {
+        const queueembed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title}`)
+            .setDescription(`${MusicData.queue[MusicData.queue.length - 1].desc}`)
+            .setImage(MusicData.queue[MusicData.queue.length - 1].thumbnail)
+            .setTimestamp()
+            .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+        await message.channel.send({
+            embeds: [queueembed]
+        });
+    }
+}
+
+
 
 client.on('messageCreate', async message => {
     const content = message.content;
@@ -321,7 +461,7 @@ client.on('messageCreate', async message => {
                             time: 10000,
                             errors: ['time']
                         })
-                        .then(collected => {
+                        .then(async collected => {
                             answer = collected.first(1);
                             collected.each(message => message.delete());
                             sentMessage.delete();
@@ -330,40 +470,32 @@ client.on('messageCreate', async message => {
 
                             if (selectnum >= 1 && selectnum <= 5) {
 
+                                const index = selectnum - 1;
+                                const url = urls[index];
+                                const title = videos[index].title;
+                                const desc = videos[index].description;
+                                const thumbnail = videos[index].thumbnails.high.url;
+
+                                const songdata = {
+                                    url,
+                                    title,
+                                    desc,
+                                    thumbnail,
+                                    message,
+                                    voicechannel
+                                }
+
+                                MusicData.queue.push(songdata);
+
                                 const connection = joinVoiceChannel({
                                     channelId: voicechannel.id,
                                     guildId: message.guild.id,
                                     adapterCreator: message.guild.voiceAdapterCreator
                                 });
 
-                                const stream = ytdl(urls[selectnum - 1], {
-                                    filter: 'audioonly'
-                                });
+                                LastConnection = connection;
 
-                                const resource = createAudioResource(stream, {
-                                    inputType: StreamType.Arbitrary,
-                                    inlineVolume: true
-                                });
-
-                                resource.volume.setVolume(0.5);
-
-                                player.play(resource);
-
-                                connection.subscribe(player);
-
-                                player.on(AudioPlayerStatus.Idle, () => connection.destroy());
-
-                                const musicselectembed = new MessageEmbed()
-                                    .setColor('#0099ff')
-                                    .setTitle(`${videos[selectnum - 1].title}`)
-                                    .setDescription(`${videos[selectnum - 1].description}`)
-                                    .setImage(videos[selectnum - 1].thumbnails.high.url)
-                                    .setTimestamp()
-                                    .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
-
-                                message.channel.send({
-                                    embeds: [musicselectembed]
-                                });
+                                await playMusic(connection, message);
                             } else {
                                 message.channel.send(`재생이 취소되었습니다.`);
                             }
@@ -383,10 +515,23 @@ client.on('messageCreate', async message => {
         if (!voicechannel) {
             return message.channel.send("우선 음성 채널에 참여해야 합니다.");
         }
+        if (LastConnection) {
+            if (voicechannel.id == message.guild.me.voice.channel.id) {
+                await LastConnection.destroy();
+                await message.channel.send("꼬미봇 플레이어를 종료합니다.");
+            } else {
+                return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
+            }
+        }
+    } else if (command === "!다음") {
+        const voicechannel = message.member.voice.channel;
+
+        if (!voicechannel) {
+            return message.channel.send("우선 음성 채널에 참여해야 합니다.");
+        }
 
         if (voicechannel.id == message.guild.me.voice.channel.id) {
-            await player.stop();
-            await message.channel.send("꼬미봇 플레이어를 종료합니다.");
+            await MusicPlayer.stop();
         } else {
             return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
         }
