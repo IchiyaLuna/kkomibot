@@ -110,7 +110,7 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
-        const stream = youtubedl(nextTrack.url, {
+        const process = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
             f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
@@ -119,8 +119,13 @@ async function processQueue() {
             stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream.stdout);
+        if (!process.stdout) {
+            console.error("NO STDOUT");
+            return;
+        }
+        const stream = process.stdout;
 
+        const resource = await createAudioResource(stream);
 
         MusicPlayer.play(resource);
 
@@ -154,7 +159,7 @@ async function playMusic(connection, message) {
         if (MusicData.queue[0]) {
             const nextTrack = MusicData.queue.shift();
 
-            const stream = youtubedl(nextTrack.url, {
+            const process = youtubedl(nextTrack.url, {
                 o: '-',
                 q: '',
                 f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
@@ -163,8 +168,13 @@ async function playMusic(connection, message) {
                 stdio: ['ignore', 'pipe', 'ignore']
             });
 
-            const resource = await createAudioResource(stream.stdout);
+            if (!process.stdout) {
+                console.error("NO STDOUT");
+                return;
+            }
+            const stream = process.stdout;
 
+            const resource = await createAudioResource(stream);
 
             MusicPlayer.play(resource);
 
@@ -191,7 +201,7 @@ async function playMusic(connection, message) {
 
         const nextTrack = MusicData.queue.shift();
 
-        const stream = youtubedl(nextTrack.url, {
+        const process = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
             f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
@@ -200,8 +210,13 @@ async function playMusic(connection, message) {
             stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream.stdout);
+        if (!process.stdout) {
+            console.error("NO STDOUT");
+            return;
+        }
+        const stream = process.stdout;
 
+        const resource = await createAudioResource(stream);
 
         MusicPlayer.play(resource);
 
