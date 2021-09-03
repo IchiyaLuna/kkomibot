@@ -110,11 +110,12 @@ async function processQueue() {
 
     try {
         const stream = ytdl(nextTrack.url, {
-            filter: 'audioonly'
+            quality: 'highestaudio',
+            filter: 'audioonly',
+            highWaterMark: 1024 * 1024 * 10
         });
 
         const resource = await createAudioResource(stream, {
-            bitrate: 64000,
             inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
@@ -154,11 +155,12 @@ async function playMusic(connection, message) {
             const nextTrack = MusicData.queue.shift();
 
             const stream = ytdl(nextTrack.url, {
-                filter: 'audioonly'
+                quality: 'highestaudio',
+                filter: 'audioonly',
+                highWaterMark: 1024 * 1024 * 10
             });
 
             const resource = await createAudioResource(stream, {
-                bitrate: 64000,
                 inputType: StreamType.Arbitrary,
                 inlineVolume: true
             });
@@ -191,11 +193,12 @@ async function playMusic(connection, message) {
         const nextTrack = MusicData.queue.shift();
 
         const stream = ytdl(nextTrack.url, {
-            filter: 'audioonly'
+            quality: 'highestaudio',
+            filter: 'audioonly',
+            highWaterMark: 1024 * 1024 * 10
         });
 
         const resource = await createAudioResource(stream, {
-            bitrate: 64000,
             inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
