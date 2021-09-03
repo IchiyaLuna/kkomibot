@@ -111,10 +111,10 @@ async function processQueue() {
 
     try {
         const stream = youtubedl(nextTrack.url, {
-            r: '10M',
-            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-            q: '',
             o: '-',
+            q: '',
+            f: 'bestaudio',
+            r: '100K',
         }, {
             stdio: ['ignore', 'pipe', 'ignore']
         });
@@ -158,10 +158,10 @@ async function playMusic(connection, message) {
             const nextTrack = MusicData.queue.shift();
 
             const stream = youtubedl(nextTrack.url, {
-                r: '10M',
-                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-                q: '',
                 o: '-',
+                q: '',
+                f: 'bestaudio',
+                r: '100K',
             }, {
                 stdio: ['ignore', 'pipe', 'ignore']
             });
@@ -198,10 +198,10 @@ async function playMusic(connection, message) {
         const nextTrack = MusicData.queue.shift();
 
         const stream = youtubedl(nextTrack.url, {
-            r: '10M',
-            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-            q: '',
             o: '-',
+            q: '',
+            f: 'bestaudio',
+            r: '100K',
         }, {
             stdio: ['ignore', 'pipe', 'ignore']
         });
