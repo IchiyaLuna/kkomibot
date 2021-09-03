@@ -120,7 +120,6 @@ async function processQueue() {
         });
 
         const resource = await createAudioResource(stream.stdout, {
-            inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
 
@@ -168,7 +167,6 @@ async function playMusic(connection, message) {
             });
 
             const resource = await createAudioResource(stream.stdout, {
-                inputType: StreamType.Arbitrary,
                 inlineVolume: true
             });
 
@@ -209,7 +207,6 @@ async function playMusic(connection, message) {
         });
 
         const resource = await createAudioResource(stream.stdout, {
-            inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
 
