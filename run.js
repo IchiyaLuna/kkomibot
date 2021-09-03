@@ -110,7 +110,7 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
-        const process = await youtubedl(nextTrack.url, {
+        const process = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
             f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
@@ -159,7 +159,7 @@ async function playMusic(connection, message) {
         if (MusicData.queue[0]) {
             const nextTrack = MusicData.queue.shift();
 
-            const process = await youtubedl(nextTrack.url, {
+            const process = youtubedl(nextTrack.url, {
                 o: '-',
                 q: '',
                 f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
@@ -201,7 +201,7 @@ async function playMusic(connection, message) {
 
         const nextTrack = MusicData.queue.shift();
 
-        const process = await youtubedl(nextTrack.url, {
+        const process = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
             f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
