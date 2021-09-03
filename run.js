@@ -3,7 +3,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const Youtube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
-const youtubedl = require('youtube-dl-exec').raw;
+const playdl = require('play-dl');
 const {
     youtubeAPI
 } = require('./config.json');
@@ -110,22 +110,11 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
-        const process = youtubedl(nextTrack.url, {
-            o: '-',
-            q: '',
-            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-            r: '10M',
-        }, {
-            stdio: ['ignore', 'pipe', 'ignore']
+        let source = await playdl.stream(nextTrack.url);
+
+        const resource = createAudioResource(source.stream, {
+            inputType: source.type
         });
-
-        if (!process.stdout) {
-            console.error("NO STDOUT");
-            return;
-        }
-        const stream = process.stdout;
-
-        const resource = await createAudioResource(stream);
 
         MusicPlayer.play(resource);
 
@@ -159,22 +148,11 @@ async function playMusic(connection, message) {
         if (MusicData.queue[0]) {
             const nextTrack = MusicData.queue.shift();
 
-            const process = youtubedl(nextTrack.url, {
-                o: '-',
-                q: '',
-                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-                r: '10M',
-            }, {
-                stdio: ['ignore', 'pipe', 'ignore']
+            let source = await playdl.stream(nextTrack.url);
+
+            const resource = createAudioResource(source.stream, {
+                inputType: source.type
             });
-
-            if (!process.stdout) {
-                console.error("NO STDOUT");
-                return;
-            }
-            const stream = process.stdout;
-
-            const resource = await createAudioResource(stream);
 
             MusicPlayer.play(resource);
 
@@ -201,22 +179,11 @@ async function playMusic(connection, message) {
 
         const nextTrack = MusicData.queue.shift();
 
-        const process = youtubedl(nextTrack.url, {
-            o: '-',
-            q: '',
-            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
-            r: '100K',
-        }, {
-            stdio: ['ignore', 'pipe', 'ignore']
+        let source = await playdl.stream(nextTrack.url);
+
+        const resource = createAudioResource(source.stream, {
+            inputType: source.type
         });
-
-        if (!process.stdout) {
-            console.error("NO STDOUT");
-            return;
-        }
-        const stream = process.stdout;
-
-        const resource = await createAudioResource(stream);
 
         MusicPlayer.play(resource);
 
