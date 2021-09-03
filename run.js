@@ -3,6 +3,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const Youtube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
+const youtubedl = require('youtube-dl-exec').raw;
 const {
     youtubeAPI
 } = require('./config.json');
@@ -109,13 +110,16 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
-        const stream = ytdl(nextTrack.url, {
-            quality: 'highestaudio',
-            filter: 'audioonly',
-            highWaterMark: 1024 * 1024 * 10
+        const stream = youtubedl(nextTrack.url, {
+            r: '10M',
+            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
+            q: '',
+            o: '-',
+        }, {
+            stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream, {
+        const resource = await createAudioResource(stream.stdout, {
             inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
@@ -154,13 +158,16 @@ async function playMusic(connection, message) {
         if (MusicData.queue[0]) {
             const nextTrack = MusicData.queue.shift();
 
-            const stream = ytdl(nextTrack.url, {
-                quality: 'highestaudio',
-                filter: 'audioonly',
-                highWaterMark: 1024 * 1024 * 10
+            const stream = youtubedl(nextTrack.url, {
+                r: '10M',
+                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
+                q: '',
+                o: '-',
+            }, {
+                stdio: ['ignore', 'pipe', 'ignore']
             });
 
-            const resource = await createAudioResource(stream, {
+            const resource = await createAudioResource(stream.stdout, {
                 inputType: StreamType.Arbitrary,
                 inlineVolume: true
             });
@@ -192,13 +199,16 @@ async function playMusic(connection, message) {
 
         const nextTrack = MusicData.queue.shift();
 
-        const stream = ytdl(nextTrack.url, {
-            quality: 'highestaudio',
-            filter: 'audioonly',
-            highWaterMark: 1024 * 1024 * 10
+        const stream = youtubedl(nextTrack.url, {
+            r: '10M',
+            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
+            q: '',
+            o: '-',
+        }, {
+            stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream, {
+        const resource = await createAudioResource(stream.stdout, {
             inputType: StreamType.Arbitrary,
             inlineVolume: true
         });
