@@ -113,17 +113,14 @@ async function processQueue() {
         const stream = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
-            f: 'bestaudio',
+            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
             r: '100K',
         }, {
             stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream.stdout, {
-            inlineVolume: true
-        });
+        const resource = await createAudioResource(stream.stdout);
 
-        resource.volume.setVolume(0.5);
 
         MusicPlayer.play(resource);
 
@@ -160,17 +157,14 @@ async function playMusic(connection, message) {
             const stream = youtubedl(nextTrack.url, {
                 o: '-',
                 q: '',
-                f: 'bestaudio',
+                f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
                 r: '100K',
             }, {
                 stdio: ['ignore', 'pipe', 'ignore']
             });
 
-            const resource = await createAudioResource(stream.stdout, {
-                inlineVolume: true
-            });
+            const resource = await createAudioResource(stream.stdout);
 
-            resource.volume.setVolume(0.5);
 
             MusicPlayer.play(resource);
 
@@ -200,17 +194,14 @@ async function playMusic(connection, message) {
         const stream = youtubedl(nextTrack.url, {
             o: '-',
             q: '',
-            f: 'bestaudio',
+            f: 'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio',
             r: '100K',
         }, {
             stdio: ['ignore', 'pipe', 'ignore']
         });
 
-        const resource = await createAudioResource(stream.stdout, {
-            inlineVolume: true
-        });
+        const resource = await createAudioResource(stream.stdout);
 
-        resource.volume.setVolume(0.5);
 
         MusicPlayer.play(resource);
 
