@@ -450,7 +450,6 @@ client.on('messageCreate', async message => {
                         .then(async collected => {
                             answer = collected.first(1);
                             collected.each(message => message.delete());
-                            sentMessage.delete();
 
                             selectnum = parseInt(answer);
 
@@ -481,13 +480,17 @@ client.on('messageCreate', async message => {
 
                                 LastConnection = connection;
 
+                                sentMessage.delete();
+
                                 playMusic(connection, message);
                             } else {
+                                sentMessage.delete();
                                 message.channel.send(`재생이 취소되었습니다.`);
                             }
                         })
                         .catch(err => {
                             console.log(err);
+                            sentMessage.delete();
                             message.channel.send("시간이 초과되었습니다.");
                         });
                 });
