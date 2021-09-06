@@ -374,6 +374,8 @@ client.on('messageCreate', async message => {
             CurMSucc: 0
         };
 
+        await Values.UserId = message.member.id;
+
         const buttons = new MessageActionRow()
             .addComponents(
                 new MessageButton()
