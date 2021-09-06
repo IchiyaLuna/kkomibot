@@ -2,7 +2,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const Youtube = require('simple-youtube-api');
-const ytdl = require('ytdl-core');
 const playdl = require('play-dl');
 const {
     youtubeAPI
@@ -13,8 +12,6 @@ const youtube = new Youtube(youtubeAPI);
 const fs = require('fs');
 
 const {
-    VoiceConnection,
-    VoiceConnectionStatus,
     AudioPlayerStatus,
     StreamType,
     createAudioPlayer,
@@ -38,6 +35,9 @@ const {
 const {
     token
 } = require('./config.json');
+const {
+    empty
+} = require('cheerio/lib/api/manipulation');
 
 
 // Create a new client instance
@@ -215,7 +215,134 @@ async function playMusic(connection, message) {
     }
 }
 
+async function AbilityStone(Values) {
+    var PlusAStr = "";
+    var PlusBStr = "";
+    var MinusStr = "";
 
+    for (let i = 0; i < 10; i++) {
+        if (Values.PlusA[i] === 1) {
+            PlusAStr += "<:plus:884256058720256020> ";
+        } else if (Values.PlusA[i] === 0) {
+            PlusAStr += "<:not:884256058607030312> ";
+        } else {
+            PlusAStr += ":heavy_multiplication_x: ";
+        }
+
+        if (Values.PlusB[i] === 1) {
+            PlusBStr += "<:plus:884256058720256020> ";
+        } else if (Values.PlusB[i] === 0) {
+            PlusBStr += "<:not:884256058607030312> ";
+        } else {
+            PlusBStr += ":heavy_multiplication_x: ";
+        }
+
+        if (Values.Minus[i] === 1) {
+            MinusStr += "<:minus:884256058745442404> ";
+        } else if (Values.Minus[i] === 0) {
+            MinusStr += "<:not:884256058607030312> ";
+        } else {
+            MinusStr += ":heavy_multiplication_x: ";
+        }
+    }
+
+    const StoneEmbed = new MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle(`꼬미봇 어빌리티 스톤 세공 시뮬레이터 (베타!)`)
+        .setDescription(`오늘의 운을 무료 돌로 시험해봅시다`)
+        .addField('성공 확률', `**${Values.CurPercent}%**`, false)
+        .addField(`증가 능력 1 <:plus:884256058720256020> x **${Values.CurASucc}**`, PlusAStr, false)
+        .addField(`증가 능력 2 <:plus:884256058720256020> x **${Values.CurBSucc}**`, PlusBStr, false)
+        .addField('균열 확률', `**${Values.CurPercent}%**`, false)
+        .addField(`감소 능력 <:minus:884256058745442404> x **${Values.CurMSucc}**`, MinusStr, false)
+        .setTimestamp()
+        .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
+
+    return StoneEmbed;
+}
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isButton()) return;
+
+    if (client[interaction.message.id]) {
+        let message = interaction.message;
+        let isSuccess = 0;
+        let Values = client[interaction.message.id];
+
+        if (Math.random() < Values.CurPercent / 100) {
+            isSuccess = 1;
+            if (Values.CurPercent > 25) {
+                client[interaction.message.id].CurPercent -= 10;
+            }
+        } else {
+            if (Values.CurPercent < 75) {
+                client[interaction.message.id].CurPercent += 10;
+            }
+        }
+
+        if (interaction.customId === "PlusA") {
+            Values.PlusA[Values.CurATry] = isSuccess;
+            Values.CurATry++;
+            if (isSuccess === 1) {
+                client[interaction.message.id].CurASucc++;
+            }
+            if (Values.CurATry === 10) {
+                message.components[0].components[0].setDisabled(true);
+                console.log(message.components[0].components[0].disabled);
+            }
+        } else if (interaction.customId === "PlusB") {
+            Values.PlusB[Values.CurBTry] = isSuccess;
+            Values.CurBTry++;
+            if (isSuccess === 1) {
+                client[interaction.message.id].CurBSucc++;
+            }
+            if (Values.CurBTry === 10) {
+                message.components[0].components[1].setDisabled(true);
+            }
+        } else if (interaction.customId === "Minus") {
+            Values.Minus[Values.CurMTry] = isSuccess;
+            Values.CurMTry++;
+            if (isSuccess === 1) {
+                client[interaction.message.id].CurMSucc++;
+            }
+            if (Values.CurMTry === 10) {
+                message.components[0].components[2].setDisabled(true);
+            }
+        }
+
+        const embed = await AbilityStone(Values);
+
+        if (Values.CurATry === 10 && Values.CurBTry === 10 && Values.CurMTry === 10) {
+            await interaction.update({
+                embeds: [embed],
+                components: [message.components[0]]
+            });
+
+            const ResultEmbed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(`${interaction.member.displayName}의 세공 결과`)
+                .setDescription('완성한 나의 돌은??')
+                .addField(`증가 능력 1`, `<:plus:884256058720256020> x **${Values.CurASucc}**`, true)
+                .addField(`증가 능력 2`, `<:plus:884256058720256020> x **${Values.CurBSucc}**`, true)
+                .addField(`감소 능력`, `<:minus:884256058745442404> x **${Values.CurMSucc}**`, true)
+                .addField('최종 결과', `무려 **${Values.CurASucc}${Values.CurBSucc}${Values.CurMSucc}** 돌을 깎았습니다!`)
+                .setTimestamp()
+                .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
+
+            await interaction.channel.send({
+                embeds: [ResultEmbed],
+                components: []
+            });
+        } else {
+            await interaction.update({
+                embeds: [embed],
+                components: [message.components[0]]
+            });
+        }
+    } else {
+        await interaction.update("오류!");
+    }
+});
 
 client.on('messageCreate', async message => {
     const content = message.content;
@@ -223,7 +350,49 @@ client.on('messageCreate', async message => {
     const command = contentArr[0];
     const parameter = contentArr[1];
 
-    if (command === '!공지') {
+    if (command === '!돌') {
+        var Values = {
+            PlusA: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+            PlusB: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+            Minus: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+            CurPercent: 75,
+            CurATry: 0,
+            CurBTry: 0,
+            CurMTry: 0,
+            CurASucc: 0,
+            CurBSucc: 0,
+            CurMSucc: 0
+        };
+
+        const buttons = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                .setCustomId('PlusA')
+                .setLabel('증가 능력 1')
+                .setStyle('PRIMARY'),
+                new MessageButton()
+                .setCustomId('PlusB')
+                .setLabel('증가 능력 2')
+                .setStyle('PRIMARY'),
+                new MessageButton()
+                .setCustomId('Minus')
+                .setLabel('감소 능력')
+                .setStyle('DANGER')
+            );
+
+        var loading = await message.reply("세공 시뮬레이터 로딩중...");
+
+        const embed = await AbilityStone(Values);
+
+        loading.delete();
+
+        var reply = await message.reply({
+            embeds: [embed],
+            components: [buttons]
+        });
+
+        client[reply.id] = Values;
+    } else if (command === '!공지') {
         if (message.member.roles.cache.has('882486032841453678')) {
             let today = new Date();
 
@@ -291,9 +460,9 @@ client.on('messageCreate', async message => {
         } else if (guild != "쪼꼬미" || server != "아브렐슈드") {
             await message.channel.send("쪼꼬미 길드에 가입된 캐릭터만 인증할 수 있습니다.");
         } else {
-            message.member.roles.add('881208641640890378');
-            message.member.roles.remove('882140536075599872')
-            message.member.setNickname(userName);
+            await message.member.roles.add('881208641640890378');
+            await message.member.roles.remove('882140536075599872')
+            await message.member.setNickname(userName);
 
             await message.channel.send({
                 embeds: [userembed]
