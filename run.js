@@ -388,7 +388,7 @@ client.on('messageCreate', async message => {
                 new MessageButton()
                 .setCustomId('Delete')
                 .setLabel('돌 버리기')
-                .setStyle('DANGER')
+                .setStyle('SECONDARY')
             );
 
         var loading = await message.reply("세공 시뮬레이터 로딩중...");
