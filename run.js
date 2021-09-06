@@ -256,7 +256,7 @@ async function AbilityStone(Values) {
         .addField('균열 확률', `**${Values.CurPercent}%**`, false)
         .addField(`감소 능력 <:minus:884256058745442404> x **${Values.CurMSucc}**`, MinusStr, false)
         .setTimestamp()
-        .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
+        .setFooter('꼬미봇 세공기 - 꼬미봇 by 아뀨');
 
     return StoneEmbed;
 }
@@ -327,7 +327,7 @@ client.on('interactionCreate', async interaction => {
                 .addField(`감소 능력`, `<:minus:884256058745442404> x **${Values.CurMSucc}**`, true)
                 .addField('최종 결과', `무려 **${Values.CurASucc}${Values.CurBSucc}${Values.CurMSucc}** 돌을 깎았습니다!`)
                 .setTimestamp()
-                .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
+                .setFooter('꼬미봇 세공기 - 꼬미봇 by 아뀨');
 
             await interaction.channel.send({
                 embeds: [ResultEmbed],
