@@ -310,6 +310,9 @@ client.on('interactionCreate', async interaction => {
             if (Values.CurMTry === 10) {
                 message.components[0].components[2].setDisabled(true);
             }
+        } else if (interaction.customId === "Delete") {
+            await interaction.deleteReply();
+            return await interaction.channel.send(`${interaction.member.displayName}화가 나서 돌을 버렸습니다.`)
         }
 
         const embed = await AbilityStone(Values);
@@ -380,6 +383,10 @@ client.on('messageCreate', async message => {
                 new MessageButton()
                 .setCustomId('Minus')
                 .setLabel('감소 능력')
+                .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('Delete')
+                .setLabel('돌 버리기')
                 .setStyle('DANGER')
             );
 
