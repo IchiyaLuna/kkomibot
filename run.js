@@ -312,7 +312,8 @@ client.on('interactionCreate', async interaction => {
             }
         } else if (interaction.customId === "Delete") {
             await interaction.message.delete();
-            return await interaction.channel.send(`${interaction.member.displayName}화가 나서 돌을 버렸습니다.`)
+            const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+            return await interaction.channel.send(`${interaction.member.displayName}${adj} 화가 나서 돌을 버렸습니다.`)
         }
 
         const embed = await AbilityStone(Values);
