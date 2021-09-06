@@ -267,6 +267,7 @@ async function AbilityStone(Values) {
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
+    if (isEmpty(client[interaction.message.id])) return;
     if (client[interaction.message.id].UserId != interaction.member.id) return;
 
     if (client[interaction.message.id]) {
