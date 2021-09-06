@@ -264,6 +264,8 @@ async function AbilityStone(Values) {
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
+    if (client[interaction.message.id].UserId != interaction.member.id) return;
+
     if (client[interaction.message.id]) {
         let message = interaction.message;
         let isSuccess = 0;
@@ -352,6 +354,7 @@ client.on('messageCreate', async message => {
 
     if (command === '!돌') {
         var Values = {
+            UserId: message.member.id,
             PlusA: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
             PlusB: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
             Minus: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
