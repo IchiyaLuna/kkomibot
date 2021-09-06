@@ -311,7 +311,7 @@ client.on('interactionCreate', async interaction => {
                 message.components[0].components[2].setDisabled(true);
             }
         } else if (interaction.customId === "Delete") {
-            await interaction.deleteReply();
+            await interaction.message.delete();
             return await interaction.channel.send(`${interaction.member.displayName}화가 나서 돌을 버렸습니다.`)
         }
 
