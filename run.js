@@ -250,6 +250,7 @@ async function AbilityStone(Values) {
         .setColor('#0099ff')
         .setTitle(`꼬미봇 어빌리티 스톤 세공 시뮬레이터 (베타!)`)
         .setDescription(`오늘의 운을 무료 돌로 시험해봅시다`)
+        .setThumbnail('./assets/stoneimg.png')
         .addField('성공 확률', `**${Values.CurPercent}%**`, false)
         .addField(`증가 능력 1 <:plus:884256058720256020> x **${Values.CurASucc}**`, PlusAStr, false)
         .addField(`증가 능력 2 <:plus:884256058720256020> x **${Values.CurBSucc}**`, PlusBStr, false)
