@@ -1,6 +1,7 @@
 // Ext lib
 const axios = require('axios');
 const cheerio = require('cheerio');
+
 const Youtube = require('simple-youtube-api');
 const playdl = require('play-dl');
 const {
@@ -30,16 +31,13 @@ const {
     MessageEmbed,
     Permissions,
     Intents,
-    DiscordAPIError,
-    MessageAttachment
+    User,
 } = require('discord.js');
+
 
 const {
     token
 } = require('./config.json');
-const {
-    empty
-} = require('cheerio/lib/api/manipulation');
 
 
 // Create a new client instance
@@ -217,6 +215,107 @@ async function playMusic(connection, message) {
     }
 }
 
+async function UserSearch(encodeNickName) {
+    const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
+    const $ = cheerio.load(html.data);
+    const username = $("span.profile-character-info__name").text();
+    var server = $("span.profile-character-info__server").text();
+    server = server.substring(1, server.length);
+    const level = $("span.profile-character-info__lv").text();
+
+    var TempArr = [];
+    $("div.level-info__expedition > span").each(function (i) {
+        TempArr[i] = $(this).text();
+    });
+    const expedition = TempArr[1];
+
+    var TempArr = [];
+    $("div.level-info2__expedition > span").each(function (i) {
+        TempArr[i] = $(this).text();
+    });
+    var itemlevel = TempArr[1];
+
+    var TempArr = [];
+    $("div.game-info__guild > span").each(function (i) {
+        TempArr[i] = $(this).text();
+    });
+    var guild = TempArr[1];
+
+    var TempArr = [];
+    $("div.game-info__title > span").each(function (i) {
+        TempArr[i] = $(this).text();
+    });
+    var title = TempArr[1];
+
+    const job = $("img.profile-character-info__img").attr("alt");
+    const jobimg = $("img.profile-character-info__img").attr("src");
+
+    var wisdom = [];
+
+    $("div.game-info__wisdom > span").each(function (i) {
+        if (isEmpty($(this).text())) {
+            wisdom[i] = "-";
+        } else {
+            wisdom[i] = $(this).text();
+        }
+    })
+
+    var basicability = [];
+
+    $("div.profile-ability-basic > ul > li > span").each(function (i) {
+        if (isEmpty($(this).text())) {
+            basicability[i] = "-";
+        } else {
+            basicability[i] = $(this).text();
+        }
+    });
+
+    var battleablility = [];
+
+    $("div.profile-ability-battle > ul > li > span").each(function (i) {
+        if (isEmpty($(this).text())) {
+            battleablility[i] = "-";
+        } else {
+            battleablility[i] = $(this).text();
+        }
+    });
+
+    var engrave = [];
+
+    $("div.profile-ability-engrave > div > div > ul > li > span").each(function (i) {
+        engrave[i] = $(this).text();
+    })
+
+    var engraveinfo = "";
+
+    for (const item of engrave) {
+        const TempArr = item.split(" Lv.");
+        engraveinfo += `\`\`${TempArr[0]}\`\` : ${TempArr[1]} 레벨\n`;
+    }
+
+    if (engraveinfo == "") {
+        engraveinfo = "각인이 없습니다."
+    }
+
+    const UserData = {
+        server: server,
+        username: username,
+        title: title,
+        guild: guild,
+        itemlevel: itemlevel,
+        level: level,
+        expedition: expedition,
+        job: job,
+        jobimg: jobimg,
+        wisdom: wisdom,
+        basicability: basicability,
+        battleablility: battleablility,
+        engraveinfo: engraveinfo
+    };
+
+    return UserData;
+}
+
 async function AbilityStone(Values) {
     var PlusAStr = "";
     var PlusBStr = "";
@@ -358,7 +457,6 @@ client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
     const command = contentArr[0];
-    const parameter = contentArr[1];
 
     if (command === '!돌') {
         var Values = {
@@ -374,8 +472,6 @@ client.on('messageCreate', async message => {
             CurBSucc: 0,
             CurMSucc: 0
         };
-
-        Values.UserId = message.member.id;
 
         const buttons = new MessageActionRow()
             .addComponents(
@@ -416,7 +512,7 @@ client.on('messageCreate', async message => {
             const alertembed = new MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle(`${today.getMonth() + 1}월 ${today.getDate()}일 꼬미봇 안내`)
-                .setDescription(`${message.content.substring(3, message.content.length)}`)
+                .setDescription(`${message.content.substring(4, message.content.length)}`)
                 .setTimestamp()
                 .setFooter('꼬미봇 공지 - 꼬미봇 by 아뀨');
 
@@ -428,159 +524,49 @@ client.on('messageCreate', async message => {
             await message.channel.send("관리자만 수행할 수 있습니다.");
         }
     } else if (command === '!인증') {
-        const encodeNickName = encodeURI(parameter);
-        const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
-        const $ = cheerio.load(html.data);
-
-        const userName = $("span.profile-character-info__name").text();
-
-        var server = $("span.profile-character-info__server").text();
-        server = server.substring(1, server.length);
-
-        const level = $("span.profile-character-info__lv").text();
-
-        var TempArr = [];
-
-        $("div.level-info__expedition > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-
-        const expedition = TempArr[1];
-
-        var TempArr = [];
-
-        $("div.level-info2__expedition > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-
-        var itemlevel = TempArr[1];
-
-        var TempArr = [];
-
-        $("div.game-info__guild > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-
-        var guild = TempArr[1];
+        const Keyword = message.content.substring(4, message.content.length);
+        const encodeNickName = encodeURI(Keyword);
+        const UserData = await UserSearch(encodeNickName);
 
         const userembed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('인증 완료')
             .setAuthor('쪼꼬미 길드 인증 시스템')
-            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`길드\`\` : ${guild}`)
-            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}`, true)
+            .setDescription(`\`\`캐릭터명\`\` : ${UserData.username}\n\`\`서버명\`\` : ${UserData.server}\n\`\`길드\`\` : ${UserData.guild}`)
+            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${UserData.itemlevel}\n\`\`원정대 레벨\`\` : ${UserData.expedition}\n\`\`전투 레벨\`\` : ${UserData.level}`, true)
             .setTimestamp()
             .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
-        if (userName == "") {
+        if (UserData.username == "") {
             await message.channel.send("유저를 찾을 수 없습니다.");
-        } else if (guild != "쪼꼬미" || server != "아브렐슈드") {
+        } else if (UserData.guild != "쪼꼬미" || UserData.server != "아브렐슈드") {
             await message.channel.send("쪼꼬미 길드에 가입된 캐릭터만 인증할 수 있습니다.");
         } else {
             await message.member.roles.add('881208641640890378');
             await message.member.roles.remove('882140536075599872')
-            await message.member.setNickname(userName);
+            await message.member.setNickname(UserData.username);
 
             await message.channel.send({
                 embeds: [userembed]
             });
         }
     } else if (command === '!유저') {
-        const encodeNickName = encodeURI(parameter);
-        const html = await axios.get(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`);
-        const $ = cheerio.load(html.data);
-        const userName = $("span.profile-character-info__name").text();
-        var server = $("span.profile-character-info__server").text();
-        server = server.substring(1, server.length);
-        const level = $("span.profile-character-info__lv").text();
-
-        var TempArr = [];
-        $("div.level-info__expedition > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-        const expedition = TempArr[1];
-
-        var TempArr = [];
-        $("div.level-info2__expedition > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-        var itemlevel = TempArr[1];
-
-        var TempArr = [];
-        $("div.game-info__guild > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-        var guild = TempArr[1];
-
-        var TempArr = [];
-        $("div.game-info__title > span").each(function (i) {
-            TempArr[i] = $(this).text();
-        });
-        var title = TempArr[1];
-
-        const job = $("img.profile-character-info__img").attr("alt");
-        const jobimg = $("img.profile-character-info__img").attr("src");
-
-        var wisdom = [];
-
-        $("div.game-info__wisdom > span").each(function (i) {
-            if (isEmpty($(this).text())) {
-                wisdom[i] = "-";
-            } else {
-                wisdom[i] = $(this).text();
-            }
-        })
-
-        var basicability = [];
-
-        $("div.profile-ability-basic > ul > li > span").each(function (i) {
-            basicability[i] = $(this).text();
-        });
-
-        var battleablility = [];
-
-        $("div.profile-ability-battle > ul > li > span").each(function (i) {
-            battleablility[i] = $(this).text();
-        });
-
-        var engrave = [];
-
-        $("div.profile-ability-engrave > div > div > ul > li > span").each(function (i) {
-            engrave[i] = $(this).text();
-        })
-
-        var engraveinfo = "";
-
-        for (const item of engrave) {
-            const TempArr = item.split(" Lv.");
-            engraveinfo += `\`\`${TempArr[0]}\`\` : ${TempArr[1]} 레벨\n`;
-        }
-
-        if (engraveinfo == "") {
-            engraveinfo = "각인이 없습니다."
-        }
-
-        for (var i = 1; i < 8; i++) {
-            if (isEmpty(battleablility[i])) {
-                battleablility[i] = "-";
-            }
-            if (isEmpty(basicability[i])) {
-                basicability[i] = "-";
-            }
-        }
+        const Keyword = message.content.substring(4, message.content.length);
+        const encodeNickName = encodeURI(Keyword);
+        const UserData = await UserSearch(encodeNickName);
 
         const userembed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('기본 정보')
             .setURL(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`)
-            .setAuthor(`${userName} - ${job}`, jobimg)
-            .setDescription(`\`\`캐릭터명\`\` : ${userName}\n\`\`서버명\`\` : ${server}\n\`\`직업\`\` : ${job}\n\`\`길드\`\` : ${guild}\n\`\`칭호\`\` : ${title}`)
-            .setThumbnail(jobimg)
-            .addField('영지 정보', `\`\`영지 이름\`\` : ${wisdom[2]}\n\`\`영지 레벨\`\` : ${wisdom[1]}`, false)
-            .addField('각인 정보', `${engraveinfo}`, false)
-            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${itemlevel}\n\`\`원정대 레벨\`\` : ${expedition}\n\`\`전투 레벨\`\` : ${level}`, true)
-            .addField('전투 특성', `\`\`치명\`\` : ${battleablility[1]}\n\`\`특화\`\` : ${battleablility[3]}\n\`\`신속\`\` : ${battleablility[7]}`, true)
-            .addField('기본 특성', `\`\`공격력\`\` : ${basicability[1]}\n\`\`최대 생명력\`\` : ${basicability[3]}`, true)
+            .setAuthor(`${UserData.username} - ${UserData.server}`, UserData.jobimg)
+            .setDescription(`\`\`캐릭터명\`\` : ${UserData.username}\n\`\`서버명\`\` : ${UserData.server}\n\`\`직업\`\` : ${UserData.job}\n\`\`길드\`\` : ${UserData.guild}\n\`\`칭호\`\` : ${UserData.title}`)
+            .setThumbnail(UserData.jobimg)
+            .addField('영지 정보', `\`\`영지 이름\`\` : ${UserData.wisdom[2]}\n\`\`영지 레벨\`\` : ${UserData.wisdom[1]}`, false)
+            .addField('각인 정보', `${UserData.engraveinfo}`, false)
+            .addField('레벨 정보', `\`\`아이템 레벨\`\` : ${UserData.itemlevel}\n\`\`원정대 레벨\`\` : ${UserData.expedition}\n\`\`전투 레벨\`\` : ${UserData.level}`, true)
+            .addField('전투 특성', `\`\`치명\`\` : ${UserData.battleablility[1]}\n\`\`특화\`\` : ${UserData.battleablility[3]}\n\`\`신속\`\` : ${UserData.battleablility[7]}`, true)
+            .addField('기본 특성', `\`\`공격력\`\` : ${UserData.basicability[1]}\n\`\`최대 생명력\`\` : ${UserData.basicability[3]}`, true)
             .setTimestamp()
             .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
@@ -599,7 +585,7 @@ client.on('messageCreate', async message => {
         }
 
         try {
-            const searchkeyword = message.content.substring(3, message.content.length);
+            const searchkeyword = message.content.substring(4, message.content.length);
 
             var urls = [];
             var embedcontent = "";
