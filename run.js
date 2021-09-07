@@ -570,7 +570,7 @@ client.on('messageCreate', async message => {
             .setTimestamp()
             .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
-        if (userName == "") {
+        if (UserData.username == "") {
             await message.channel.send("유저를 찾을 수 없습니다.");
         } else {
             await message.channel.send({
