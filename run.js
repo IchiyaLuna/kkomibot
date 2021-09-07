@@ -119,14 +119,14 @@ async function processQueue() {
         MusicPlayer.play(resource);
 
         const nowplaying = new MessageEmbed()
-            .setColor('#0099ff')
+            .setColor('#c4302b')
             .setTitle(`지금 재생중 - ${nextTrack.title}`)
             .setDescription(`${nextTrack.desc}`)
             .setImage(nextTrack.thumbnail)
             .setTimestamp()
             .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
 
-        if (MusicData.queue[0]) {
+        if (!isEmpty(MusicData.queue[0])) {
             nowplaying.addField('다음곡', MusicData.queue[0].title);
         }
 
@@ -159,7 +159,7 @@ async function playMusic(connection, message) {
             connection.subscribe(MusicPlayer);
 
             const nowplaying = new MessageEmbed()
-                .setColor('#0099ff')
+                .setColor('#c4302b')
                 .setTitle(`지금 재생중 - ${nextTrack.title}`)
                 .setDescription(`${nextTrack.desc}`)
                 .setImage(nextTrack.thumbnail)
@@ -190,7 +190,7 @@ async function playMusic(connection, message) {
         connection.subscribe(MusicPlayer);
 
         const nowplaying = new MessageEmbed()
-            .setColor('#0099ff')
+            .setColor('#c4302b')
             .setTitle(`지금 재생중 - ${nextTrack.title}`)
             .setDescription(`${nextTrack.desc}`)
             .setImage(nextTrack.thumbnail)
@@ -202,7 +202,7 @@ async function playMusic(connection, message) {
         });
     } else {
         const queueembed = new MessageEmbed()
-            .setColor('#0099ff')
+            .setColor('#c4302b')
             .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title}`)
             .setDescription(`${MusicData.queue[MusicData.queue.length - 1].desc}`)
             .setImage(MusicData.queue[MusicData.queue.length - 1].thumbnail)
@@ -348,7 +348,7 @@ async function AbilityStone(Values) {
     }
 
     const StoneEmbed = new MessageEmbed()
-        .setColor('#0099ff')
+        .setColor('#464964')
         .setTitle(`꼬미봇 어빌리티 스톤 세공 시뮬레이터 (베타!)`)
         .setDescription(`오늘의 운을 무료 돌로 시험해봅시다`)
         .setThumbnail('https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Ability/Ability_22.png')
@@ -428,7 +428,7 @@ client.on('interactionCreate', async interaction => {
             });
 
             const ResultEmbed = new MessageEmbed()
-                .setColor('#0099ff')
+                .setColor('#464964')
                 .setTitle(`${interaction.member.displayName}의 세공 결과`)
                 .setDescription('완성한 나의 돌은??')
                 .addField(`증가 능력 1`, `<:plus:884256058720256020> x **${Values.CurASucc}**`, true)
@@ -510,7 +510,7 @@ client.on('messageCreate', async message => {
             let today = new Date();
 
             const alertembed = new MessageEmbed()
-                .setColor('#0099ff')
+                .setColor('#ffd700')
                 .setTitle(`${today.getMonth() + 1}월 ${today.getDate()}일 꼬미봇 안내`)
                 .setDescription(`${message.content.substring(4, message.content.length)}`)
                 .setTimestamp()
@@ -529,7 +529,7 @@ client.on('messageCreate', async message => {
         const UserData = await UserSearch(encodeNickName);
 
         const userembed = new MessageEmbed()
-            .setColor('#0099ff')
+            .setColor('#ffd700')
             .setTitle('인증 완료')
             .setAuthor('쪼꼬미 길드 인증 시스템')
             .setDescription(`\`\`캐릭터명\`\` : ${UserData.username}\n\`\`서버명\`\` : ${UserData.server}\n\`\`길드\`\` : ${UserData.guild}`)
@@ -556,7 +556,7 @@ client.on('messageCreate', async message => {
         const UserData = await UserSearch(encodeNickName);
 
         const userembed = new MessageEmbed()
-            .setColor('#0099ff')
+            .setColor('#ffd700')
             .setTitle('기본 정보')
             .setURL(`https://lostark.game.onstove.com/Profile/Character/${encodeNickName}`)
             .setAuthor(`${UserData.username} - ${UserData.server}`, UserData.jobimg)
@@ -600,7 +600,7 @@ client.on('messageCreate', async message => {
             }
 
             const musicselectembed = new MessageEmbed()
-                .setColor('#0099ff')
+                .setColor('#c4302b')
                 .setTitle(`검색된 음악 리스트`)
                 .setDescription(`${embedcontent}`)
                 .addField('사용법', '원하는 노래의 \`\`숫자\`\`만 입력하세요. 취소는 아무거나 입력하세요.')
@@ -695,6 +695,27 @@ client.on('messageCreate', async message => {
             await MusicPlayer.stop();
         } else {
             return message.channel.send("봇과 같은 음성 채널에 있어야 합니다.");
+        }
+    } else if (command === "!목록") {
+        var queuestr = "";
+
+        if (!isEmpty(MusicData.queue[0])) {
+            for (let i = 0; i < MusicData.queue.length; i++) {
+                queuestr += `**${i + 1} : ${MusicData.queue[i].title}**\n`;
+            }
+
+            const queueembed = new MessageEmbed()
+                .setColor('#c4302b')
+                .setTitle(`예약된 음악 리스트`)
+                .setDescription(`${queuestr}`)
+                .setTimestamp()
+                .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+            await message.channel.send({
+                embeds: [queueembed]
+            });
+        } else {
+            await message.channel.send("예약된 노래가 없습니다.");
         }
     }
 });
