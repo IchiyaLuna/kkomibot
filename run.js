@@ -947,21 +947,21 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'attend') {
 
-        if (typeof client[interaction.message.id] == 'undefined') return;
+        if (typeof client[interaction.message.id].attendlist == 'undefined') return;
 
-        if (client[interaction.message.id].includes(interaction.member.displayName)) {
+        if (client[interaction.message.id].attendlist.includes(interaction.member.displayName)) {
             var newembed = interaction.message.embeds[0];
             return await interaction.update({
                 embeds: [newembed]
             });
         }
 
-        client[interaction.message.id].push(interaction.member.displayName);
+        client[interaction.message.id].attendlist.push(interaction.member.displayName);
 
         var fieldcontent = "";
 
-        for (let i = 0; i < client[interaction.message.id].length; i++) {
-            fieldcontent += `**${i + 1} : ${client[interaction.message.id][i]}**\n`;
+        for (let i = 0; i < client[interaction.message.id].attendlist.length; i++) {
+            fieldcontent += `**${i + 1} : ${client[interaction.message.id].attendlist[i]}**\n`;
         }
 
         var newembed = interaction.message.embeds[0];
@@ -973,23 +973,23 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'cancel') {
 
-        if (typeof client[interaction.message.id] == 'undefined') return;
+        if (typeof client[interaction.message.id].attendlist == 'undefined') return;
 
-        if (!client[interaction.message.id].includes(interaction.member.displayName)) {
+        if (!client[interaction.message.id].attendlist.includes(interaction.member.displayName)) {
             var newembed = interaction.message.embeds[0];
             return await interaction.update({
                 embeds: [newembed]
             });
         }
 
-        const index = client[interaction.message.id].indexOf(interaction.member.displayName);
+        const index = client[interaction.message.id].attendlist.indexOf(interaction.member.displayName);
 
-        client[interaction.message.id].splice(index, 1);
+        client[interaction.message.id].attendlist.splice(index, 1);
 
         var fieldcontent = "";
 
-        for (let i = 0; i < client[interaction.message.id].length; i++) {
-            fieldcontent += `**${i + 1} : ${client[interaction.message.id][i]}**\n`;
+        for (let i = 0; i < client[interaction.message.id].attendlist.length; i++) {
+            fieldcontent += `**${i + 1} : ${client[interaction.message.id].attendlist[i]}**\n`;
         }
 
         if (isEmpty(fieldcontent)) {
@@ -1003,6 +1003,31 @@ client.on('interactionCreate', async interaction => {
         await interaction.update({
             embeds: [newembed]
         });
+    } else if (interaction.customId == 'stop') {
+
+        if (typeof client[interaction.message.id] == 'undefined') return;
+
+        if (interaction.member.id != client[interaction.message.id].authorid) {
+            return await interaction.reply({
+                content: "파티장만 모집을 취소할 수 있습니다",
+                ephemeral: true
+            });
+        } else {
+            const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
+
+            const embed = new MessageEmbed()
+                .setAuthor("꼬미봇")
+                .setColor("#e368cf")
+                .setTitle(`${interaction.member.displayName}${adj} 파티 모집을 취소했습니다.`)
+                .setDescription(`파티 모집이 취소되었습니다.`)
+                .setTimestamp()
+                .setFooter("꼬미봇 by 아뀨");
+
+            await interaction.update({
+                embeds: [embed],
+                components: []
+            });
+        }
     } else if (interaction.customId == 'vnormal') {
 
         const adj = checkBatchimEnding(interaction.member.displayName) ? "이" : "가";
@@ -1011,7 +1036,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 발탄 노말 파티를 모집중!`)
-            .setDescription(`군단장 발탄 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 발탄 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1026,6 +1051,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1040,9 +1069,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'vhard') {
 
@@ -1052,7 +1083,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 발탄 하드 파티를 모집중!`)
-            .setDescription(`군단장 발탄 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 발탄 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1067,6 +1098,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1081,9 +1116,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'bnormal') {
 
@@ -1093,7 +1130,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 비아키스 노말 파티를 모집중!`)
-            .setDescription(`군단장 비아키스 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 비아키스 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1108,6 +1145,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1122,9 +1163,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'bhard') {
 
@@ -1134,7 +1177,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 비아키스 하드 파티를 모집중!`)
-            .setDescription(`군단장 비아키스 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 비아키스 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1149,6 +1192,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1163,9 +1210,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'rehearsal') {
 
@@ -1175,7 +1224,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 리허설 파티 모집`)
-            .setDescription(`군단장 쿠크세이튼 리허설 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 쿠크세이튼 리허설 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1190,6 +1239,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1204,9 +1257,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'snormal') {
 
@@ -1216,7 +1271,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 노말 파티를 모집중!`)
-            .setDescription(`군단장 쿠크세이튼 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 쿠크세이튼 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1231,6 +1286,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1245,9 +1304,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'shard') {
 
@@ -1257,7 +1318,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 쿠크세이튼 하드 파티를 모집중!`)
-            .setDescription(`군단장 쿠크세이튼 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 쿠크세이튼 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1272,6 +1333,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1286,9 +1351,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'dejavu') {
 
@@ -1298,7 +1365,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 데자뷰 파티 모집`)
-            .setDescription(`군단장 아브렐슈드 데자뷰 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 아브렐슈드 데자뷰 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1313,6 +1380,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1327,9 +1398,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'anormal') {
 
@@ -1339,7 +1412,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 노말 파티를 모집중!`)
-            .setDescription(`군단장 아브렐슈드 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 아브렐슈드 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1354,6 +1427,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1368,9 +1445,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'ahard') {
 
@@ -1380,7 +1459,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 아브렐슈드 하드 파티를 모집중!`)
-            .setDescription(`군단장 아브렐슈드 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 아브렐슈드 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1395,6 +1474,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1409,9 +1492,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'inormal') {
 
@@ -1421,7 +1506,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 일리아칸 노말 파티를 모집중!`)
-            .setDescription(`군단장 일리아칸 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 일리아칸 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1436,6 +1521,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1450,9 +1539,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'ihard') {
 
@@ -1462,7 +1553,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 일리아칸 하드 파티를 모집중!`)
-            .setDescription(`군단장 일리아칸 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 일리아칸 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1477,6 +1568,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1491,9 +1586,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'knormal') {
 
@@ -1503,7 +1600,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 카멘 노말 파티를 모집중!`)
-            .setDescription(`군단장 카멘 노말 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 카멘 노말 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1518,6 +1615,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1532,9 +1633,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     } else if (interaction.customId == 'khard') {
 
@@ -1544,7 +1647,7 @@ client.on('interactionCreate', async interaction => {
             .setAuthor("꼬미봇")
             .setColor("#e368cf")
             .setTitle(`${interaction.member.displayName}${adj} 카멘 하드 파티를 모집중!`)
-            .setDescription(`군단장 카멘 하드 레이드 파티입니다.\n채팅이나 놀자에요를 통해 참여 의사를 알려주세요!`)
+            .setDescription(`군단장 카멘 하드 레이드 파티입니다.\n아래 버튼을 눌러 참여 의사를 알려주세요!`)
             .addField('참여 인원', `**1 : ${interaction.member.displayName}**`)
             .setTimestamp()
             .setFooter("꼬미봇 by 아뀨");
@@ -1559,6 +1662,10 @@ client.on('interactionCreate', async interaction => {
                 .setCustomId('cancel')
                 .setLabel('참여 취소')
                 .setStyle('DANGER'),
+                new MessageButton()
+                .setCustomId('stop')
+                .setLabel('모집 취소')
+                .setStyle('SECONDARY'),
             );
 
         interaction.update({
@@ -1573,9 +1680,11 @@ client.on('interactionCreate', async interaction => {
             embeds: [embed],
             components: [attendcomp]
         }).then(function (message) {
-            message.react("<:nolja:881807287449169920>");
             const partyrecruit = message.id;
-            client[partyrecruit] = [interaction.member.displayName];
+            client[partyrecruit] = {
+                authorid: interaction.member.id,
+                attendlist: [interaction.member.displayName]
+            };
         });
     }
 });
