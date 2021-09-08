@@ -368,7 +368,9 @@ client.on('interactionCreate', async interaction => {
 
     if (isEmpty(client[interaction.message.id])) return;
 
-    if (isEmpty(client[interaction.message.id].authorid)) return;
+    const buttonId = interaction.customId;
+
+    if (buttonId != "PlusA" || buttonId != "PlusB" || buttonId != "Minus" || buttonId != "Delete") return;
 
     if (client[interaction.message.id].UserId != interaction.member.id) {
         return await interaction.reply({
