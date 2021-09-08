@@ -367,7 +367,13 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
     if (isEmpty(client[interaction.message.id])) return;
-    if (client[interaction.message.id].UserId != interaction.member.id) return;
+
+    if (client[interaction.message.id].UserId != interaction.member.id) {
+        return await interaction.reply({
+            content: "본인의 돌만 깎아주세요!",
+            ephemeral: true
+        });
+    }
 
     if (client[interaction.message.id]) {
         let message = interaction.message;
