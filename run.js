@@ -953,7 +953,7 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'attend') {
 
-        if (typeof client[interaction.message.id].attendlist == 'undefined') return;
+        if (typeof client[interaction.message.id] == 'undefined') return;
 
         if (client[interaction.message.id].attendlist.includes(interaction.member.displayName)) {
             var newembed = interaction.message.embeds[0];
@@ -979,7 +979,7 @@ client.on('interactionCreate', async interaction => {
         });
     } else if (interaction.customId == 'cancel') {
 
-        if (typeof client[interaction.message.id].attendlist == 'undefined') return;
+        if (typeof client[interaction.message.id] == 'undefined') return;
 
         if (!client[interaction.message.id].attendlist.includes(interaction.member.displayName)) {
             var newembed = interaction.message.embeds[0];
