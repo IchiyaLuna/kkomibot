@@ -38,6 +38,12 @@ const {
 const {
     token
 } = require('./config.json');
+const {
+    time
+} = require('console');
+const {
+    homedir
+} = require('os');
 
 
 // Create a new client instance
@@ -316,6 +322,84 @@ async function UserSearch(encodeNickName) {
     return UserData;
 }
 
+async function MariShop() {
+    const html = await axios.get(`https://lostark.game.onstove.com/Shop#mari`);
+    const $ = cheerio.load(html.data);
+
+    let today = new Date();
+
+    let hours = today.getHours(); // 시
+    let minutes = today.getMinutes();
+
+    if (hours < 6) {
+        hours = 6 - hours;
+        if (minutes > 0) {
+            hours -= 1;
+            minutes = 60 - minutes;
+        }
+    } else if (hours < 12) {
+        hours = 12 - hours;
+        if (minutes > 0) {
+            hours -= 1;
+            minutes = 60 - minutes;
+        }
+    } else if (hours < 18) {
+        hours = 18 - hours;
+        if (minutes > 0) {
+            hours -= 1;
+            minutes = 60 - minutes;
+        }
+    } else if (hours < 24) {
+        hours = 24 - hours;
+        if (minutes > 0) {
+            hours -= 1;
+            minutes = 60 - minutes;
+        }
+    }
+
+    var TimeLeft = "**새 상품 입고까지 ";
+
+    if (hours != 0) {
+        TimeLeft += `${hours}시간 `;
+    }
+
+    TimeLeft += `${minutes}분 남았습니다**`;
+
+    var ItemNameList = [];
+
+    $("ul.list-items > li > div > span").each(function (i) {
+        ItemNameList[i] = $(this).text();
+    });
+
+    var ItemPriceList = [];
+
+    $("ul.list-items > li > div > div.area-amount > span").each(function (i) {
+        ItemPriceList[i] = $(this).text();
+    });
+
+    var GrowItems = "";
+
+    for (let i = 0; i < 6; i++) {
+        GrowItems += `**${ItemNameList[i]}** - <:crystal:886884143198265345> **${ItemPriceList[i]}**\n`;
+    }
+
+    var FightLivingItems = "";
+
+    for (let i = 18; i < 24; i++) {
+        FightLivingItems += `**${ItemNameList[i]}** - <:crystal:886884143198265345> **${ItemPriceList[i]}**\n`;
+    }
+
+    const MaryEmbed = new MessageEmbed()
+        .setColor('#6A5ACD')
+        .setTitle(`마리의 비밀 상점`)
+        .setDescription(TimeLeft)
+        .addField(`성장 추천 상품`, GrowItems, false)
+        .addField(`전투 & 생활 추천 상품`, FightLivingItems, false)
+        .setTimestamp()
+        .setFooter('꼬미봇 로아샵 뷰어 - 꼬미봇 by 아뀨');
+
+    return MaryEmbed;
+}
 async function AbilityStone(Values) {
     var PlusAStr = "";
     var PlusBStr = "";
@@ -587,6 +671,12 @@ client.on('messageCreate', async message => {
                 embeds: [userembed]
             });
         }
+    } else if (command === "!마리") {
+        const embed = await MariShop();
+
+        await message.channel.send({
+            embeds: [embed]
+        });
     } else if (command === "!재생") {
         const voicechannel = message.member.voice.channel;
 
