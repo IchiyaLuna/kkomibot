@@ -400,6 +400,60 @@ async function MariShop() {
 
     return MaryEmbed;
 }
+
+async function DailyContent() {
+    let today = new Date();
+
+    let hours = today.getHours(); // 시
+    let minutes = today.getMinutes();
+
+    var CurMin = hours * 60 + minutes;
+
+    const html = await axios.get('https://lostark.inven.co.kr/');
+    const $ = cheerio.load(html.data);
+
+    var ContentNameList = [];
+
+    $('div.hotbossPart > ul > li > div.txtBox > p.npcname').each(function (i) {
+        ContentNameList[i] = $(this).text();
+        console.log(`${ContentNameList[i]}`);
+    });
+
+    var ContentTimeList = [];
+    var ContentLeftList = [];
+    var ContentHourList = [];
+    var ContentMinList = [];
+
+    $('div.hotbossPart > ul > li > div.txtBox > p.gentime').each(function (i) {
+        ContentTimeList[i] = $(this).attr("data-datetime");
+        ContentHourList[i] = parseInt(ContentTimeList[i].split(' ')[1].split(':')[0]);
+        ContentMinList[i] = parseInt(ContentTimeList[i].split(' ')[1].split(':')[1]);
+        ContentLeftList[i] = ContentHourList[i] * 60 + ContentMinList[i];
+        console.log(`${ContentTimeList[i]} / ${hours}:${minutes} /${ContentLeftList[i] - CurMin}`);
+    });
+
+    const ContentEmbed = new MessageEmbed()
+        .setColor('#6A5ACD')
+        .setTitle(`일일 컨텐츠 타이머`)
+        .setDescription('모험섬, 카오스게이트, 필드보스 등 곧 시작하는 일일 컨텐츠를 알려드립니다.')
+        .setTimestamp()
+        .setFooter('꼬미봇 컨텐츠 타이머 - 꼬미봇 by 아뀨');
+
+    for (let i = 0; i < 6; i++) {
+        if (ContentHourList[i] == 0) {
+            ContentHourList[i] = '00';
+        }
+
+        if (ContentMinList[i] == 0) {
+            ContentMinList[i] = '00';
+        }
+
+        ContentEmbed.addField(`**${ContentNameList[i]}**`, `**${ContentHourList[i]}:${ContentMinList[i]}** (시작까지 ${ContentLeftList[i] - CurMin}분 남음)`);
+    }
+
+    return ContentEmbed;
+}
+
 async function AbilityStone(Values) {
     var PlusAStr = "";
     var PlusBStr = "";
@@ -673,6 +727,12 @@ client.on('messageCreate', async message => {
         }
     } else if (command === "!마리") {
         const embed = await MariShop();
+
+        await message.channel.send({
+            embeds: [embed]
+        });
+    } else if (command === "!일일") {
+        const embed = await DailyContent();
 
         await message.channel.send({
             embeds: [embed]
