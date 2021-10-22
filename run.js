@@ -271,6 +271,8 @@ async function UserSearch(encodeNickName) {
     $("div.profile-ability-basic > ul > li > span").each(function (i) {
         if (isEmpty($(this).text())) {
             basicability[i] = "-";
+        } else if ($(this).text() == "undefined") {
+            basicability[i] = "-";
         } else {
             basicability[i] = $(this).text();
         }
@@ -280,6 +282,8 @@ async function UserSearch(encodeNickName) {
 
     $("div.profile-ability-battle > ul > li > span").each(function (i) {
         if (isEmpty($(this).text())) {
+            battleablility[i] = "-";
+        } else if ($(this).text() == "undefined") {
             battleablility[i] = "-";
         } else {
             battleablility[i] = $(this).text();
@@ -447,8 +451,13 @@ async function DailyContent() {
         if (ContentMinList[i] == 0) {
             ContentMinList[i] = '00';
         }
-
-        ContentEmbed.addField(`**${ContentNameList[i]}**`, `**${ContentHourList[i]}:${ContentMinList[i]}** (시작까지 ${ContentLeftList[i] - CurMin}분 남음)`);
+        if (ContentLeftList[i] - CurMin > 0) {
+            ContentEmbed.addField(`**${ContentNameList[i]}**`, `**${ContentHourList[i]}:${ContentMinList[i]}** (시작까지 ${ContentLeftList[i] - CurMin}분 남음)`);
+        } else if (ContentLeftList[i] - CurMin) {
+            ContentEmbed.addField(`**${ContentNameList[i]}**`, `**${ContentHourList[i]}:${ContentMinList[i]}** (진행중!)`);
+        } else {
+            ContentEmbed.addField(`**${ContentNameList[i]}**`, `**${ContentHourList[i]}:${ContentMinList[i]}** (시작까지 ${24 * 60 - CurMin}분 남음)`);
+        }
     }
 
     return ContentEmbed;
@@ -668,6 +677,13 @@ client.on('messageCreate', async message => {
             channel.send({
                 embeds: [alertembed]
             });
+        } else {
+            await message.channel.send("관리자만 수행할 수 있습니다.");
+        }
+    } else if (command === '!채팅') {
+        if (message.member.roles.cache.has('882486032841453678')) {
+            channel = client.channels.cache.get('881207628263456817');
+            channel.send(message.content.substring(4, message.content.length));
         } else {
             await message.channel.send("관리자만 수행할 수 있습니다.");
         }
