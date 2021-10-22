@@ -268,6 +268,10 @@ async function UserSearch(encodeNickName) {
 
     var basicability = [];
 
+    for (let i = 0; i < 8; i++) {
+        basicability[i] = "-";
+    }
+
     $("div.profile-ability-basic > ul > li > span").each(function (i) {
         if (isEmpty($(this).text())) {
             basicability[i] = "-";
@@ -279,6 +283,10 @@ async function UserSearch(encodeNickName) {
     });
 
     var battleablility = [];
+
+    for (let i = 0; i < 8; i++) {
+        battleablility[i] = "-";
+    }
 
     $("div.profile-ability-battle > ul > li > span").each(function (i) {
         if (isEmpty($(this).text())) {
