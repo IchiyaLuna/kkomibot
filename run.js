@@ -532,12 +532,14 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("클리어 골드", `1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (총 3,300 ${gold})`);
 
-            RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개");
+            RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개", true);
             RaidEmbed.addField("아르고스의 발톱", "16개 / 5개 / 2개", true);
             RaidEmbed.addField("아르고스의 선혈", "0~1개 / 1개 / 2개", true);
             RaidEmbed.addField("아르고스의 힘줄", "0~1개 / 1개 / 2개", true);
 
-            RaidEmbed.addField("전설(3T) 장신구", "1개 / 1개 / 1개");
+            RaidEmbed.addField('\u200b', '\u200b')
+
+            RaidEmbed.addField("전설(3T) 장신구", "1개 / 1개 / 1개", true);
             RaidEmbed.addField("전설(3T) 어빌리티 스톤", "1개 / 1개 / 1개", true);
 
             RaidEmbed.addField("기대 보상 (확률)", "전설 장비(2T), 영웅~전설 각인서, 영웅~전설 카드");
