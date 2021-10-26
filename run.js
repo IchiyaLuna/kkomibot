@@ -526,11 +526,11 @@ async function RaidInfo(RaidName) {
 
     switch (raidcode) {
         case 0:
-            RaidEmbed.addField('**입장 (권장) 레벨**', '1370 / 1385 / 1400 (1475 이상 보상 획득 불가)');
+            RaidEmbed.addField('**입장 (권장) 레벨**', '1370 / 1385 / 1400 (__1475 이상 보상 획득 불가__)');
 
-            RaidEmbed.addField('**[노말] 난이도**', "**보상명** : **1 페이즈 개수** / **2 페이즈 개수** / **3 페이즈 개수**");
+            RaidEmbed.addField('**[노말] 난이도**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (총 3,300 ${gold})`);
+            RaidEmbed.addField("클리어 골드", `1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (**총 3,300** ${gold})`);
 
             RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개", true);
             RaidEmbed.addField("아르고스의 발톱", "16개 / 5개 / 2개", true);
