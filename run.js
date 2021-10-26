@@ -581,7 +581,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("-----------------------------", "\u200b");
 
-            RaidEmbed.addField('**[하드] 난이도 (1445)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
+            RaidEmbed.addField('**[하드] 난이도 (1460)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
             RaidEmbed.addField("클리어 골드", `500 ${gold} / 1,000 ${gold} / 3,000 ${gold} (**총 4,500** ${gold})`);
 
