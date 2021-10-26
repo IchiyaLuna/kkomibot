@@ -555,7 +555,9 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("마수의 뼈", "1개 / 2개 (총 3개)", true);
 
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 힘줄 2개, 뼈 1개 / 2 페이즈 (<:crystal:886884143198265345> 150) 힘줄 3개, 뼈 1개 (총 뼈 2개)");
-            /////////
+
+            RaidEmbed.addField("-----------------------------", "\u200b");
+
             RaidEmbed.addField('**[하드] 난이도 (1445)**', "1 페이즈 개수 / 2 페이즈 개수");
 
             RaidEmbed.addField("클리어 골드", `1,000 ${gold} / 3,500 ${gold} (**총 4,500** ${gold})`);
