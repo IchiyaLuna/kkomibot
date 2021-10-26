@@ -471,6 +471,98 @@ async function DailyContent() {
     return ContentEmbed;
 }
 
+async function RaidInfo(RaidName) {
+
+    const gold = "<:gold:902442418329235507>"
+
+    var raidcode;
+    var raidname;
+
+    if (RaidName.includes("아르고스")) raidcode = 0;
+    else if (RaidName.includes("발탄")) raidcode = 1;
+    else if (RaidName.includes("비아")) raidcode = 2;
+    else if (RaidName.includes("쿠크")) raidcode = 3;
+    else if (RaidName.includes("아브렐")) raidcode = 4;
+    else raidcode = -1;
+
+    if (raidcode == -1) {
+        const RaidEmbed = new MessageEmbed()
+            .setColor('#6A5ACD')
+            .setTitle(`레이드를 찾을 수 없습니다.`)
+            .setDescription(`입력하신 레이드명 ${RaidName}으로 레이드를 찾을 수 없었어요.`)
+            .setTimestamp()
+            .setFooter('꼬미봇 레이드 사전 - 꼬미봇 by 아뀨');
+
+        return RaidEmbed;
+    }
+
+    switch (raidcode) {
+        case 0:
+            raidname = "아르고스";
+            break;
+        case 1:
+            raidname = "발탄";
+            break;
+        case 2:
+            raidname = "비아키스";
+            break;
+        case 3:
+            raidname = "쿠크세이튼";
+            break;
+        case 4:
+            raidname = "아브렐슈드";
+            break;
+        default:
+            raidname = "오류";
+            break;
+    }
+
+    const RaidEmbed = new MessageEmbed()
+        .setColor('#6A5ACD')
+        .setTitle(`[${raidname} 레이드] 정보`)
+        .setDescription('어비스 레이드, 군단장 레이드 등의 보상을 알려드립니다.')
+        .setTimestamp()
+        .setFooter('꼬미봇 레이드 사전 - 꼬미봇 by 아뀨');
+
+    switch (raidcode) {
+        case 0:
+            RaidEmbed.addField('**입장 (권장) 레벨**', '1370 / 1385 / 1400 (1475 이상 보상 획득 불가)');
+
+            var normal = "";
+
+            normal += "``보상명`` - **1 페이즈 개수** / **2 페이즈 개수** / **3 페이즈 개수**"
+            normal += `\`\`클리어 골드\`\` - 1,500 ${gold} / 800 ${gold} / 1,000 ${gold}\n`;
+            normal += "``아르고스의 어금니`` - 6개 / 2개 / 1개\n";
+            normal += "``아르고스의 발톱`` - 16개 / 5개 / 2개\n";
+            normal += "``아르고스의 선혈`` - 0~1개 / 1개 / 2개\n";
+            normal += "``아르고스의 힘줄`` - 0~1개 / 1개 / 2개\n";
+            normal += "``전설(3T) 장신구`` - 1개 / 1개 / 1개\n";
+            normal += "``전설(3T) 어빌리티 스톤`` - 1개 / 1개 / 1개\n";
+            normal += "``기대 보상`` - 전설 장비(2T), 영웅/전설 각인서, 영웅/전설 카드\n";
+            normal += "``더보기 보상`` - 파괴석 결정, 수호석 결정, 아르고스의 선혈/힘줄, 전설(3T) 장신구/돌, 전체 카드팩";
+
+            RaidEmbed.addField('**[노말] 난이도**', normal);
+            break;
+        case 1:
+            raidname = "발탄";
+            break;
+        case 2:
+            raidname = "비아키스";
+            break;
+        case 3:
+            raidname = "쿠크세이튼";
+            break;
+        case 4:
+            raidname = "아브렐슈드";
+            break;
+        default:
+            raidname = "오류";
+            break;
+    }
+
+    return RaidEmbed;
+}
+
 async function AbilityStone(Values) {
     var PlusAStr = "";
     var PlusBStr = "";
@@ -757,6 +849,13 @@ client.on('messageCreate', async message => {
         });
     } else if (command === "!일일") {
         const embed = await DailyContent();
+
+        await message.channel.send({
+            embeds: [embed]
+        });
+    } else if (command === "!정보") {
+        const raidname = message.content.substring(4, message.content.length);
+        const embed = await RaidInfo(raidname);
 
         await message.channel.send({
             embeds: [embed]
