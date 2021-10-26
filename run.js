@@ -487,7 +487,7 @@ async function RaidInfo(RaidName) {
 
     if (raidcode == -1) {
         const RaidEmbed = new MessageEmbed()
-            .setColor('#6A5ACD')
+            .setColor('#c4302b')
             .setTitle(`레이드를 찾을 수 없습니다.`)
             .setDescription(`입력하신 레이드명 ${RaidName}으로 레이드를 찾을 수 없었어요.`)
             .setTimestamp()
@@ -518,7 +518,7 @@ async function RaidInfo(RaidName) {
     }
 
     const RaidEmbed = new MessageEmbed()
-        .setColor('#6A5ACD')
+        .setColor('#c4302b')
         .setTitle(`[${raidname} 레이드] 정보`)
         .setDescription('어비스 레이드, 군단장 레이드 등의 보상을 알려드립니다.')
         .setTimestamp()
@@ -532,19 +532,38 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("클리어 골드", `1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (**총 3,300** ${gold})`);
 
-            RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개", true);
-            RaidEmbed.addField("아르고스의 발톱", "16개 / 5개 / 2개", true);
-            RaidEmbed.addField("아르고스의 선혈", "0~1개 / 1개 / 2개", true);
-            RaidEmbed.addField("아르고스의 힘줄", "0~1개 / 1개 / 2개", true);
+            RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개 (총 9개)", true);
+            RaidEmbed.addField("아르고스의 발톱", "16개 / 5개 / 2개 (총 23개)", true);
+            RaidEmbed.addField("아르고스의 선혈", "0~1개 / 1개 / 2개 (총 3~4개)", true);
+            RaidEmbed.addField("아르고스의 힘줄", "0~1개 / 1개 / 2개 (총 3~4개)", true);
 
             RaidEmbed.addField("전설(3T) 장신구", "1개 / 1개 / 1개", true);
             RaidEmbed.addField("전설(3T) 어빌리티 스톤", "1개 / 1개 / 1개", true);
 
+            RaidEmbed.addField("경매 보상", "영웅~전설 각인서, 아르고스 장비(3T 전설), 기타 아이템");
             RaidEmbed.addField("기대 보상 (확률)", "전설 장비(2T), 영웅~전설 각인서, 영웅~전설 카드");
             RaidEmbed.addField("더보기 보상", "파괴석 결정, 수호석 결정, 아르고스의 선혈 & 힘줄, 전설(3T) 장신구 & 돌, 전체 카드팩");
             break;
         case 1:
-            raidname = "발탄";
+            RaidEmbed.addField('**입장 레벨**', '노말 : 1415 / 하드 : 1445');
+
+            RaidEmbed.addField('**[노말] 난이도 (1415)**', "1 페이즈 개수 / 2 페이즈 개수");
+
+            RaidEmbed.addField("클리어 골드", `800 ${gold} / 2,500 ${gold} (**총 3,300** ${gold})`);
+
+            RaidEmbed.addField("마수의 힘줄", "2개 / 3개 (총 5개)", true);
+            RaidEmbed.addField("마수의 뼈", "1개 / 2개 (총 3개)", true);
+
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 힘줄 2개, 뼈 1개 / 2 페이즈 (<:crystal:886884143198265345> 150) 힘줄 3개, 뼈 1개 (총 뼈 2개)");
+            /////////
+            RaidEmbed.addField('**[하드] 난이도 (1445)**', "1 페이즈 개수 / 2 페이즈 개수");
+
+            RaidEmbed.addField("클리어 골드", `1,000 ${gold} / 3,500 ${gold} (**총 4,500** ${gold})`);
+
+            RaidEmbed.addField("마수의 뼈", "2개 / 3개 (총 5개)", true);
+
+            RaidEmbed.addField("경매 보상 (장비 재료만)", "마수의 뼈 5개");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 뼈 2개 / 2 페이즈 (<:crystal:886884143198265345> 150) 뼈 3개 (총 5개)");
             break;
         case 2:
             raidname = "비아키스";
