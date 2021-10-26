@@ -537,8 +537,6 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("아르고스의 선혈", "0~1개 / 1개 / 2개", true);
             RaidEmbed.addField("아르고스의 힘줄", "0~1개 / 1개 / 2개", true);
 
-            RaidEmbed.addField('\u200b', '\u200b')
-
             RaidEmbed.addField("전설(3T) 장신구", "1개 / 1개 / 1개", true);
             RaidEmbed.addField("전설(3T) 어빌리티 스톤", "1개 / 1개 / 1개", true);
 
