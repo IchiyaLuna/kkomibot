@@ -473,7 +473,7 @@ async function DailyContent() {
 
 async function RaidInfo(RaidName) {
 
-    const gold = "<:gold:902442418329235507>"
+    const gold = "<:gold:902442377250238524>"
 
     var raidcode;
     var raidname;
@@ -530,7 +530,7 @@ async function RaidInfo(RaidName) {
 
             var normal = "";
 
-            normal += "``보상명`` - **1 페이즈 개수** / **2 페이즈 개수** / **3 페이즈 개수**"
+            normal += "``보상명`` - **1 페이즈 개수** / **2 페이즈 개수** / **3 페이즈 개수**\n"
             normal += `\`\`클리어 골드\`\` - 1,500 ${gold} / 800 ${gold} / 1,000 ${gold}\n`;
             normal += "``아르고스의 어금니`` - 6개 / 2개 / 1개\n";
             normal += "``아르고스의 발톱`` - 16개 / 5개 / 2개\n";
