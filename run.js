@@ -928,6 +928,22 @@ client.on('messageCreate', async message => {
         await message.channel.send({
             embeds: [embed]
         });
+    } else if (command === "!경매") {
+        const cost = parseInt(message.content.substring(4, message.content.length));
+        const Qraid = Math.floor(cost * 0.95 * 3 / 4);
+        const Oraid = Math.floor(cost * 0.95 * 7 / 8);
+        const calcEmbed = new MessageEmbed()
+            .setColor('#ffd700')
+            .setTitle('꼬미봇 경매 계산기')
+            .setDescription('합리적인 가격으로 입찰해서 호구당하지 말기!! (최적가 이하로 입찰하세요)')
+            .addField('4인 레이드 최적가', `${Qraid}`)
+            .addField('8인 레이드 최적가', `${Oraid}`)
+            .setTimestamp()
+            .setFooter('정보 조회 - 꼬미봇 by 아뀨');
+
+        await message.channel.send({
+            embeds: [calcEmbed]
+        });
     } else if (command === "!재생") {
         const voicechannel = message.member.voice.channel;
 
