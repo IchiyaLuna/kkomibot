@@ -531,7 +531,7 @@ async function RaidInfo(RaidName) {
             var normal = "";
 
             normal += "**보상명** : **1 페이즈 개수** / **2 페이즈 개수** / **3 페이즈 개수**\n"
-            normal += `**클리어 골드** : 1,500 ${gold} / 800 ${gold} / 1,000 ${gold}\n (총 3,300 ${gold})`;
+            normal += `**클리어 골드** : 1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (총 3,300 ${gold})\n`;
             normal += "**아르고스의 어금니** : 6개 / 2개 / 1개\n";
             normal += "**아르고스의 발톱** : 16개 / 5개 / 2개\n";
             normal += "**아르고스의 선혈** : 0~1개 / 1개 / 2개\n";
