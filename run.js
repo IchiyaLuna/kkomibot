@@ -609,7 +609,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("클리어 골드", `4,500 ${gold} / 1,500 ${gold} / 1,500 ${gold} (**총 7,500** ${gold})`);
 
             RaidEmbed.addField("몽환의 뿔", "7개 / 7개 / 8개 (총 22개)");
-
+            RaidEmbed.addField("경매 보상 (장비 재료만)", "몽환의 뿔 5개 / 몽환의 뿔 5개 / 몽환의 뿔 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1-2 페이즈 (<:crystal:886884143198265345> 50) 뿔 7개\n3-4 페이즈 (<:crystal:886884143198265345> 80) 뿔 7개\n5-6 페이즈 (<:crystal:886884143198265345> 120) 뿔 8개\n(총 뿔 22개)");
 
             RaidEmbed.addField("-----------------------------", "\u200b");
@@ -620,7 +620,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("몽환의 사념", "7개 / 7개 / 8개 (총 22개)");
 
-            RaidEmbed.addField("경매 보상 (장비 재료만)", "욕망의 날개 5개");
+            RaidEmbed.addField("경매 보상 (장비 재료만)", "몽환의 사념 5개 / 몽환의 사념 5개 / 몽환의 사념 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1-2 페이즈 (<:crystal:886884143198265345> 100) 사념 7개\n3-4 페이즈 (<:crystal:886884143198265345> 130) 사념 7개\n5-6 페이즈 (<:crystal:886884143198265345> 200) 사념 8개\n(총 사념 22개)");
             break;
         default:
