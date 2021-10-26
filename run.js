@@ -599,6 +599,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("광기의 나팔", "1개 / 2개 / 2개 (총 5개)");
 
+            RaidEmbed.addField("경매 보상 (장비 재료만)", "광기의 나팔 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 나팔 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 나팔 2개\n3 페이즈 (<:crystal:886884143198265345> 120) 나팔 2개\n(총 나팔 5개)");
             break;
         case 4:
