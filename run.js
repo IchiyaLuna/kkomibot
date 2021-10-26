@@ -936,8 +936,8 @@ client.on('messageCreate', async message => {
             .setColor('#ffd700')
             .setTitle('꼬미봇 경매 계산기')
             .setDescription('합리적인 가격으로 입찰해서 호구당하지 말기!! (최적가 이하로 입찰하세요)')
-            .addField('4인 레이드 최적가', `${Qraid}`)
-            .addField('8인 레이드 최적가', `${Oraid}`)
+            .addField('4인 레이드 최적가', `${Qraid} <:gold:902442377250238524>`, true)
+            .addField('8인 레이드 최적가', `${Oraid} <:gold:902442377250238524>`, true)
             .setTimestamp()
             .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
