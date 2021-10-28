@@ -549,10 +549,6 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("영웅(3T) 장신구", "1개 / 1개", true);
             RaidEmbed.addField("영웅(3T) 어빌리티 스톤", "1개 / 1개", true);
 
-            RaidEmbed.addField("경매 보상", "영웅~전설 각인서, 기타 아이템");
-            RaidEmbed.addField("기대 보상 (확률)", "영웅 장비(3T), 영웅~전설 각인서, 영웅~전설 카드");
-            RaidEmbed.addField("더보기 보상", "파괴석 결정, 수호석 결정\n오레하의 빛무리 & 수정\n영웅(3T) 장신구 & 돌\n전체 카드팩");
-
             RaidEmbed.addField("-----------------------------", "\u200b");
 
             RaidEmbed.addField('**[하드] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
@@ -566,6 +562,12 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("영웅(3T) 장신구", "1개 / 1개", true);
             RaidEmbed.addField("영웅(3T) 어빌리티 스톤", "1개 / 1개", true);
+
+            RaidEmbed.addField("-----------------------------", "\u200b");
+
+            RaidEmbed.addField("경매 보상", "영웅~전설 각인서, 기타 아이템");
+            RaidEmbed.addField("기대 보상 (확률)", "영웅 장비(3T), 영웅~전설 각인서, 영웅~전설 카드");
+            RaidEmbed.addField("더보기 보상", "파괴석 결정, 수호석 결정\n오레하의 빛무리 & 수정\n영웅(3T) 장신구 & 돌\n전체 카드팩");
             break;
         case 1:
             RaidEmbed.addField('**입장 (권장) 레벨**', '1370 / 1385 / 1400 (__1475 이상 보상 획득 불가__)');
