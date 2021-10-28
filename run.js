@@ -539,7 +539,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
 
-            RaidEmbed.addField("클리어 골드", `1,250 ${gold} / 1,350 ${gold} (**총 2,600** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `700 ${gold} / 800 ${gold} (**총 1,500** ${gold})`);
 
             RaidEmbed.addField("노을빛 비늘", "4개 / 4개 (총 8개)", true);
             RaidEmbed.addField("빛나는 발톱", "10개 / 10개 (총 20개)", true);
@@ -553,7 +553,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[하드] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
 
-            RaidEmbed.addField("클리어 골드", `1,400 ${gold} / 1,500 ${gold} (**총 2,900** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `800 ${gold} / 900 ${gold} (**총 1,700** ${gold})`);
 
             RaidEmbed.addField("노을빛 비늘", "8개 / 16개 (총 24개)", true);
             RaidEmbed.addField("빛나는 발톱", "20개 / 40개 (총 60개)", true);
