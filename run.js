@@ -477,12 +477,18 @@ async function RaidInfo(RaidName) {
 
     var raidcode;
     var raidname;
-
-    if (RaidName.includes("아르고스")) raidcode = 0;
-    else if (RaidName.includes("발탄")) raidcode = 1;
-    else if (RaidName.includes("비아")) raidcode = 2;
-    else if (RaidName.includes("쿠크")) raidcode = 3;
-    else if (RaidName.includes("아브렐")) raidcode = 4;
+    if (RaidName.includes("오레하")) raidcode = 0;
+    else if (RaidName.includes("아이라")) raidcode = 0;
+    else if (RaidName.includes("모구로")) raidcode = 0;
+    else if (RaidName.includes("세토")) raidcode = 0;
+    else if (RaidName.includes("알비온")) raidcode = 0;
+    else if (RaidName.includes("아르고스")) raidcode = 1;
+    else if (RaidName.includes("알고")) raidcode = 1;
+    else if (RaidName.includes("발탄")) raidcode = 2;
+    else if (RaidName.includes("비아")) raidcode = 3;
+    else if (RaidName.includes("쿠크")) raidcode = 4;
+    else if (RaidName.includes("쿠쿠")) raidcode = 5;
+    else if (RaidName.includes("아브")) raidcode = 6;
     else raidcode = -1;
 
     if (raidcode == -1) {
@@ -498,19 +504,22 @@ async function RaidInfo(RaidName) {
 
     switch (raidcode) {
         case 0:
-            raidname = "아르고스";
+            raidname = "오레하 2종 던전";
             break;
         case 1:
-            raidname = "발탄";
+            raidname = "아르고스 레이드";
             break;
         case 2:
-            raidname = "비아키스";
+            raidname = "군단장 발탄 레이드";
             break;
         case 3:
-            raidname = "쿠크세이튼";
+            raidname = "군단장 비아키스 레이드";
             break;
         case 4:
-            raidname = "아브렐슈드";
+            raidname = "군단장 쿠크세이튼 레이드";
+            break;
+        case 5:
+            raidname = "군단장 아브렐슈드 레이드";
             break;
         default:
             raidname = "오류";
@@ -519,13 +528,46 @@ async function RaidInfo(RaidName) {
 
     const RaidEmbed = new MessageEmbed()
         .setColor('#c4302b')
-        .setTitle(`[${raidname} 레이드] 정보`)
+        .setTitle(`[${raidname}] 정보`)
         .setDescription('어비스 레이드, 군단장 레이드 등의 보상을 알려드립니다.')
         .setTimestamp()
         .setFooter('꼬미봇 레이드 사전 - 꼬미봇 by 아뀨');
 
     switch (raidcode) {
         case 0:
+            RaidEmbed.addField('**입장 레벨**', '입장 : 1325 (매칭 신청은 1325 / 1340 / 하드 1355) (__1415 이상 보상 획득 불가__)');
+
+            RaidEmbed.addField('**[노말] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
+
+            RaidEmbed.addField("클리어 골드", `1,250 ${gold} / 1,350 ${gold} (**총 2,600** ${gold})`);
+
+            RaidEmbed.addField("노을빛 비늘", "4개 / 4개 (총 8개)", true);
+            RaidEmbed.addField("빛나는 발톱", "10개 / 10개 (총 20개)", true);
+            RaidEmbed.addField("오레하의 빛무리", "1개 / 1개 (총 2개)", true);
+            RaidEmbed.addField("오레하의 수정", "1개 / 1개 (총 2개)", true);
+
+            RaidEmbed.addField("영웅(3T) 장신구", "1개 / 1개", true);
+            RaidEmbed.addField("영웅(3T) 어빌리티 스톤", "1개 / 1개", true);
+
+            RaidEmbed.addField("경매 보상", "영웅~전설 각인서, 기타 아이템");
+            RaidEmbed.addField("기대 보상 (확률)", "영웅 장비(3T), 영웅~전설 각인서, 영웅~전설 카드");
+            RaidEmbed.addField("더보기 보상", "파괴석 결정, 수호석 결정\n오레하의 빛무리 & 수정\n영웅(3T) 장신구 & 돌\n전체 카드팩");
+
+            RaidEmbed.addField("-----------------------------", "\u200b");
+
+            RaidEmbed.addField('**[하드] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
+
+            RaidEmbed.addField("클리어 골드", `1,400 ${gold} / 1,500 ${gold} (**총 2,900** ${gold})`);
+
+            RaidEmbed.addField("노을빛 비늘", "8개 / 16개 (총 24개)", true);
+            RaidEmbed.addField("빛나는 발톱", "20개 / 40개 (총 60개)", true);
+            RaidEmbed.addField("오레하의 빛무리", "1개 / 2개 (총 3개)", true);
+            RaidEmbed.addField("오레하의 수정", "1개 / 2개 (총 3개)", true);
+
+            RaidEmbed.addField("영웅(3T) 장신구", "1개 / 1개", true);
+            RaidEmbed.addField("영웅(3T) 어빌리티 스톤", "1개 / 1개", true);
+            break;
+        case 1:
             RaidEmbed.addField('**입장 (권장) 레벨**', '1370 / 1385 / 1400 (__1475 이상 보상 획득 불가__)');
 
             RaidEmbed.addField('**[노말] 난이도**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
@@ -544,7 +586,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("기대 보상 (확률)", "전설 장비(2T), 영웅~전설 각인서, 영웅~전설 카드");
             RaidEmbed.addField("더보기 보상", "파괴석 결정, 수호석 결정\n아르고스의 선혈 & 힘줄\n전설(3T) 장신구 & 돌\n전체 카드팩");
             break;
-        case 1:
+        case 2:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1415 / 하드 : 1445');
 
             RaidEmbed.addField('**[노말] 난이도 (1415)**', "1 페이즈 개수 / 2 페이즈 개수");
@@ -567,7 +609,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("경매 보상 (장비 재료만)", "마수의 뼈 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 뼈 2개\n2 페이즈 (<:crystal:886884143198265345> 150) 뼈 3개\n(총 5개)");
             break;
-        case 2:
+        case 3:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1430 / 하드 : 1460');
 
             RaidEmbed.addField('**[노말] 난이도 (1430)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
@@ -590,7 +632,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("경매 보상 (장비 재료만)", "욕망의 날개 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 날개 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 날개 2개\n3 페이즈 (<:crystal:886884143198265345> 120) 날개 2개\n(총 날개 5개)");
             break;
-        case 3:
+        case 4:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1475 / 하드 : ???');
 
             RaidEmbed.addField('**[노말] 난이도 (1475)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
@@ -602,7 +644,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("경매 보상 (장비 재료만)", "광기의 나팔 5개");
             RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 나팔 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 나팔 2개\n3 페이즈 (<:crystal:886884143198265345> 120) 나팔 2개\n(총 나팔 5개)");
             break;
-        case 4:
+        case 5:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1490/1500/1520 / 하드 : 1540/1550/1560');
 
             RaidEmbed.addField('**[노말] 난이도 (1490/1500/1520)**', "1-2 페이즈(1490) 개수 / 3-4 페이즈(1500) 개수 / 5-6 페이즈(1520) 개수");
