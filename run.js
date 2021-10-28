@@ -487,8 +487,8 @@ async function RaidInfo(RaidName) {
     else if (RaidName.includes("발탄")) raidcode = 2;
     else if (RaidName.includes("비아")) raidcode = 3;
     else if (RaidName.includes("쿠크")) raidcode = 4;
-    else if (RaidName.includes("쿠쿠")) raidcode = 5;
-    else if (RaidName.includes("아브")) raidcode = 6;
+    else if (RaidName.includes("쿠쿠")) raidcode = 4;
+    else if (RaidName.includes("아브")) raidcode = 5;
     else raidcode = -1;
 
     if (raidcode == -1) {
