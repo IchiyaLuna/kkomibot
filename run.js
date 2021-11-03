@@ -9,6 +9,8 @@ const {
 } = require('./config.json');
 const youtube = new Youtube(youtubeAPI);
 
+const sqlite3 = require('sqlite3').verbose();
+
 // Require the necessary discord.js classes
 const fs = require('fs');
 
@@ -676,6 +678,105 @@ async function RaidInfo(RaidName) {
     return RaidEmbed;
 }
 
+async function db_all(db, query) {
+    return new Promise(function (resolve, reject) {
+        db.all(query, function (err, rows) {
+            if (err) {
+                return reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
+async function CouponList() {
+    const CouponEmbed = new MessageEmbed()
+        .setColor('#c4302b')
+        .setTitle('로스트아크 쿠폰 목록!')
+        .setDescription('쿠폰 등록은 https://lostark.game.onstove.com/Coupon/Available 에서 가능해요!')
+        .setTimestamp()
+        .setFooter('꼬미봇 로아 쿠폰 - 꼬미봇 by 아뀨');
+
+    var couponlist = {};
+
+    let db = new sqlite3.Database('./db/kkomibot.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('connected to kkomibot database');
+    });
+
+    let sql = 'SELECT * FROM couponList';
+
+    const result = await db_all(db, sql);
+
+    result.forEach(function (row) {
+        couponlist[row.couponcode] = row.coupondue;
+    });
+
+    for (var key in couponlist) {
+        CouponEmbed.addField(`쿠폰코드 : ${key}`, `기간 : ${couponlist[key]}까지`);
+    }
+
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('kkomibot database closed');
+    });
+
+    return CouponEmbed;
+}
+
+async function CouponAdd(code, due) {
+    let db = new sqlite3.Database('./db/kkomibot.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('connected to kkomibot database');
+    });
+
+    let sql = 'INSERT  INTO couponList VALUES(?,?)';
+
+    db.run(sql, code, due, function (err) {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('inserted!');
+    })
+
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('kkomibot database closed');
+    });
+}
+
+async function CouponDel(code) {
+    let db = new sqlite3.Database('./db/kkomibot.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('connected to kkomibot database');
+    });
+
+    let sql = 'DELETE FROM couponList WHERE couponcode=?';
+
+    db.run(sql, code, function (err) {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log(`deleted ${this.changes}`);
+    })
+
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('kkomibot database closed');
+    });
+}
+
 async function AbilityStone(Values) {
     var PlusAStr = "";
     var PlusBStr = "";
@@ -989,6 +1090,33 @@ client.on('messageCreate', async message => {
         await message.channel.send({
             embeds: [calcEmbed]
         });
+    } else if (command === "!쿠폰") {
+        const embed = await CouponList();
+
+        await message.channel.send({
+            embeds: [embed]
+        });
+    } else if (command === "!쿠폰추가") {
+        const code = contentArr[1];
+        var due = "";
+
+        for (let i = 2; i < contentArr.length; i++) {
+            due += contentArr[i];
+        }
+
+        if (code == "" || due == "") {
+            console.error("empty!");
+        } else {
+            await CouponAdd(code, due);
+        }
+    } else if (command === "!쿠폰제거") {
+        const code = contentArr[1];
+
+        if (code == "") {
+            console.error("empty!");
+        } else {
+            await CouponDel(code);
+        }
     } else if (command === "!재생") {
         const voicechannel = message.member.voice.channel;
 
