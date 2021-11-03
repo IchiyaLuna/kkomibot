@@ -26,7 +26,6 @@
     "play-dl": "^0.7.6",
     "simple-youtube-api": "^5.2.1",
     "sqlite3": "^5.0.2",
-    "youtube-dl-exec": "^1.2.5",
     "ytdl-core": "^4.9.1"
   }
 }
