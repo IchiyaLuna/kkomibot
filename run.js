@@ -1077,13 +1077,13 @@ client.on('messageCreate', async message => {
     } else if (command === "!경매") {
         const cost = parseInt(message.content.substring(4, message.content.length));
         
-        const QraidMax = Math.floor(cost * 0.95 * 3 / 4);
-        const OraidMax = Math.floor(cost * 0.95 * 7 / 8);
-        var QraidRecommand = Math.floor(QraidMax * 10 / 11);
-        var OraidRecommand = Math.floor(OraidMax * 10 / 11);
+        const QraidMax = Math.round(cost * 0.95 * 3 / 4);
+        const OraidMax = Math.round(cost * 0.95 * 7 / 8);
+        var QraidRecommand = Math.round(QraidMax * 10 / 11);
+        var OraidRecommand = Math.round(OraidMax * 10 / 11);
 
-        if (Math.floor(QraidRecommand * 1.1) < QraidMax) QraidRecommand += 1;
-        if (Math.floor(OraidRecommand * 1.1) < OraidMax) OraidRecommand += 1;
+        if (Math.round(QraidRecommand * 1.1) < QraidMax) QraidRecommand += 1;
+        if (Math.round(OraidRecommand * 1.1) < OraidMax) OraidRecommand += 1;
 
         const calcEmbed = new MessageEmbed()
             .setColor('#ffd700')
