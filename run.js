@@ -1076,14 +1076,25 @@ client.on('messageCreate', async message => {
         });
     } else if (command === "!경매") {
         const cost = parseInt(message.content.substring(4, message.content.length));
-        const Qraid = Math.floor(cost * 0.95 * 3 / 4);
-        const Oraid = Math.floor(cost * 0.95 * 7 / 8);
+        
+        const QraidMax = Math.floor(cost * 0.95 * 3 / 4);
+        const OraidMax = Math.floor(cost * 0.95 * 7 / 8);
+        var QraidRecommand = Math.floor(QraidMax * 10 / 11);
+        var OraidRecommand = Math.floor(OraidMax * 10 / 11);
+
+        if (QraidRecommand * 1.1 < QraidMax) QraidRecommand += 1;
+        if (OraidRecommand * 1.1 < OraidMax) OraidRecommand += 1;
+
         const calcEmbed = new MessageEmbed()
             .setColor('#ffd700')
             .setTitle('꼬미봇 경매 계산기')
             .setDescription('합리적인 가격으로 입찰해서 호구당하지 말기!! (최적가 이하로 입찰하세요)')
-            .addField('4인 레이드 최적가', `${Qraid} <:gold:902442377250238524>`, true)
-            .addField('8인 레이드 최적가', `${Oraid} <:gold:902442377250238524>`, true)
+            .addField('최적가', '최적가는 다음 입찰금액이 상한선을 넘도록 하는 추천 금액이에요.')
+            .addField('4인 레이드 최적가', `${QraidRecommand} <:gold:902442377250238524>`, true)
+            .addField('8인 레이드 최적가', `${OraidRecommand} <:gold:902442377250238524>`, true)
+            .addField('상한선', '상한선은 손해를 입기 직전의 가격이니 절대 이 위로 입찰하지 마세요!')
+            .addField('4인 레이드 상한선', `${QraidMax} <:gold:902442377250238524>`, true)
+            .addField('8인 레이드 상한선', `${OraidMax} <:gold:902442377250238524>`, true)
             .setTimestamp()
             .setFooter('정보 조회 - 꼬미봇 by 아뀨');
 
