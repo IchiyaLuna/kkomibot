@@ -1082,8 +1082,8 @@ client.on('messageCreate', async message => {
         var QraidRecommand = Math.floor(QraidMax * 10 / 11);
         var OraidRecommand = Math.floor(OraidMax * 10 / 11);
 
-        if (QraidRecommand * 1.1 < QraidMax) QraidRecommand += 1;
-        if (OraidRecommand * 1.1 < OraidMax) OraidRecommand += 1;
+        if (Math.floor(QraidRecommand * 1.1) < QraidMax) QraidRecommand += 1;
+        if (Math.floor(OraidRecommand * 1.1) < OraidMax) OraidRecommand += 1;
 
         const calcEmbed = new MessageEmbed()
             .setColor('#ffd700')
