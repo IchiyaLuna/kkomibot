@@ -168,15 +168,31 @@ async function playMusic(connection, message) {
         if (MusicData.queue[0]) {
             const nextTrack = MusicData.queue.shift();
 
-            let source = await playdl.stream(nextTrack.url);
+            try {
+                let source = await playdl.stream(nextTrack.url);
 
-            const resource = createAudioResource(source.stream, {
-                inputType: source.type
-            });
+                const resource = createAudioResource(source.stream, {
+                    inputType: source.type
+                });
 
-            MusicPlayer.play(resource);
+                MusicPlayer.play(resource);
 
-            connection.subscribe(MusicPlayer);
+                connection.subscribe(MusicPlayer);
+            } catch (error) {
+                const errormusic = new MessageEmbed()
+                    .setColor('#c4302b')
+                    .setTitle(`재생 실패 - ${nextTrack.title}`)
+                    .setDescription('무언가 문제가 있었나봐요!')
+                    .setTimestamp()
+                    .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+                nextTrack.message.channel.send({
+                    embeds: [errormusic]
+                });
+
+                console.log(error);
+                return;
+            }
 
             const nowplaying = new MessageEmbed()
                 .setColor('#c4302b')
@@ -189,6 +205,17 @@ async function playMusic(connection, message) {
             await message.channel.send({
                 embeds: [nowplaying]
             });
+        } else {
+            const errormusic = new MessageEmbed()
+                    .setColor('#c4302b')
+                    .setTitle(`재생 실패 - 오잉!`)
+                    .setDescription('무언가 문제가 있었나봐요!')
+                    .setTimestamp()
+                    .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+                message.channel.send({
+                    embeds: [errormusic]
+                });
         }
     } else if (voicechannel.id != message.guild.me.voice.channel.id) {
         const LastAdded = MusicData.queue[MusicData.queue.length - 1];
