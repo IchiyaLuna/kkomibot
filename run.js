@@ -145,6 +145,17 @@ async function processQueue() {
 
         MusicData.QueueLock = false;
     } catch (error) {
+        const errormusic = new MessageEmbed()
+            .setColor('#c4302b')
+            .setTitle(`재생 실패 - ${nextTrack.title}`)
+            .setDescription('무언가 문제가 있었나봐요!')
+            .setTimestamp()
+            .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
+
+        nextTrack.message.channel.send({
+            embeds: [errormusic]
+        });
+
         console.log(error);
         MusicData.QueueLock = false;
         return processQueue();
@@ -965,7 +976,8 @@ async function authMsgUpdate() {
         msgupdatedata.authmsg.msgobj = newMsg;
         msgupdatedata.authmsg.isSent = true;
     } else {
-        msgupdatedata.authmsg.msgobj.delete();
+        msgupdatedata.authmsg.msgobj.delete()
+        .catch(console.log);
         var newMsg = await authChannel.send({
             embeds: [authEmbed]
         });
@@ -990,7 +1002,8 @@ async function guinMsgUpdate() {
         msgupdatedata.guinmsg.msgobj = newMsg;
         msgupdatedata.guinmsg.isSent = true;
     } else {
-        msgupdatedata.guinmsg.msgobj.delete();
+        msgupdatedata.guinmsg.msgobj.delete()
+        .catch(console.log);
         var newMsg = await guinChannel.send({
             embeds: [guinEmbed]
         });
@@ -1015,7 +1028,8 @@ async function helpMsgUpdate() {
         msgupdatedata.helpmsg.msgobj = newMsg;
         msgupdatedata.helpmsg.isSent = true;
     } else {
-        msgupdatedata.helpmsg.msgobj.delete();
+        msgupdatedata.helpmsg.msgobj.delete()
+        .catch(console.log);
         var newMsg = await helpChannel.send({
             embeds: [helpEmbed]
         });
