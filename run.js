@@ -1006,7 +1006,7 @@ async function helpMsgUpdate() {
     .setTimestamp()
     .setFooter('꼬미봇 자동 공지 - 꼬미봇 by 아뀨');
 
-    const helpChannel = client.channels.cache.get('881216045615022160');
+    const helpChannel = client.channels.cache.get('881216179287515206');
 
     if (!msgupdatedata.helpmsg.isSent) {
         var newMsg = await helpChannel.send({
