@@ -929,12 +929,22 @@ var msgupdatedata = {
     authmsg: {
         isSent: false,
         msgobj: null
+    },
+    guinmsg: {
+        isSent: false,
+        msgobj: null
+    },
+    helpmsg: {
+        isSent: false,
+        msgobj: null
     }
 };
 
 async function msgUpdateInit() {
 
     await authMsgUpdate();
+    await guinMsgUpdate();
+    await helpMsgUpdate();
 }
 
 async function authMsgUpdate() {
@@ -963,6 +973,56 @@ async function authMsgUpdate() {
     }
 }
 
+async function guinMsgUpdate() {
+    const guinEmbed = new MessageEmbed()
+    .setColor('#ED3939')
+    .setTitle('구인·구직 채널 안내')
+    .setDescription('2인 이상 함께 할 수 있는 모든 콘텐츠의 파티를 모집할 수 있는 채널입니다! 편하게 모집해 보세요~!')
+    .setTimestamp()
+    .setFooter('꼬미봇 자동 공지 - 꼬미봇 by 아뀨');
+
+    const guinChannel = client.channels.cache.get('881216045615022160');
+
+    if (!msgupdatedata.guinmsg.isSent) {
+        var newMsg = await guinChannel.send({
+            embeds: [guinEmbed]
+        });
+        msgupdatedata.guinmsg.msgobj = newMsg;
+        msgupdatedata.guinmsg.isSent = true;
+    } else {
+        msgupdatedata.guinmsg.msgobj.delete();
+        var newMsg = await guinChannel.send({
+            embeds: [guinEmbed]
+        });
+        msgupdatedata.guinmsg.msgobj = newMsg;
+    }
+}
+
+async function helpMsgUpdate() {
+    const helpEmbed = new MessageEmbed()
+    .setColor('#ED3939')
+    .setTitle('도와줘요! 채널 안내')
+    .setDescription('로아가 힘겹고 어려울 때 같이하거나 알려줄 선생님을 구해봐요! 다들 친절하게 도와주실 거예요!')
+    .setTimestamp()
+    .setFooter('꼬미봇 자동 공지 - 꼬미봇 by 아뀨');
+
+    const helpChannel = client.channels.cache.get('881216045615022160');
+
+    if (!msgupdatedata.helpmsg.isSent) {
+        var newMsg = await helpChannel.send({
+            embeds: [helpEmbed]
+        });
+        msgupdatedata.helpmsg.msgobj = newMsg;
+        msgupdatedata.helpmsg.isSent = true;
+    } else {
+        msgupdatedata.helpmsg.msgobj.delete();
+        var newMsg = await helpChannel.send({
+            embeds: [helpEmbed]
+        });
+        msgupdatedata.helpmsg.msgobj = newMsg;
+    }
+}
+
 client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
@@ -972,6 +1032,16 @@ client.on('messageCreate', async message => {
         if (message.member.id !== '881485487506849792')
         if (command !== '!인증')
         await authMsgUpdate();
+    }
+
+    if (message.channel.id === '881216045615022160') {
+        if (message.member.id !== '881485487506849792')
+        await guinMsgUpdate();
+    }
+
+    if (message.channel.id === '881216179287515206') {
+        if (message.member.id !== '881485487506849792')
+        await helpMsgUpdate();
     }
 
     if (command === '!돌') {
