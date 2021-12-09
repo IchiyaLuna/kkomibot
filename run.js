@@ -977,7 +977,7 @@ async function guinMsgUpdate() {
     const guinEmbed = new MessageEmbed()
     .setColor('#ED3939')
     .setTitle('구인·구직 채널 안내')
-    .setDescription('2인 이상 함께 할 수 있는 모든 콘텐츠의 파티를 모집할 수 있는 채널입니다! 편하게 모집해 보세요~!')
+    .setDescription('2인 이상 함께 할 수 있는 모든 콘텐츠의 파티를 모집할 수 있는 채널입니다!\n편하게 모집해 보세요~!')
     .setTimestamp()
     .setFooter('꼬미봇 자동 공지 - 꼬미봇 by 아뀨');
 
@@ -1002,7 +1002,7 @@ async function helpMsgUpdate() {
     const helpEmbed = new MessageEmbed()
     .setColor('#ED3939')
     .setTitle('도와줘요! 채널 안내')
-    .setDescription('로아가 힘겹고 어려울 때 같이하거나 알려줄 선생님을 구해봐요! 다들 친절하게 도와주실 거예요!')
+    .setDescription('로아가 힘겹고 어려울 때 같이하거나 알려줄 선생님을 구해봐요!\n다들 친절하게 도와주실 거예요!')
     .setTimestamp()
     .setFooter('꼬미봇 자동 공지 - 꼬미봇 by 아뀨');
 
