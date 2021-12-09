@@ -70,6 +70,7 @@ client.once('ready', () => {
     client.user.setActivity('쪼꼬미들의 목소리를', {
         type: 'LISTENING'
     });
+    msgUpdateInit();
 });
 
 function checkBatchimEnding(word) {
@@ -924,10 +925,54 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+var msgupdatedata = {
+    authmsg: {
+        isSent: false,
+        msgobj: null
+    }
+};
+
+async function msgUpdateInit() {
+
+    await authMsgUpdate();
+}
+
+async function authMsgUpdate() {
+    const authEmbed = new MessageEmbed()
+    .setColor('#ED3939')
+    .setTitle('인증 센터 공지')
+    .setDescription('안전한 디스코드 이용을 위해, __인게임 길드에 가입된 캐릭터__를 인증해야 참여할 수 있어요!')
+    .addField(`인증 방법`, `\`\`!인증 본인캐릭터이름\`\``)
+    .setTimestamp()
+    .setFooter('꼬미봇 인증 센터 - 꼬미봇 by 아뀨');
+
+    const authChannel = client.channels.cache.get('882144291818983485');
+
+    if (!msgupdatedata.authmsg.isSent) {
+        var newMsg = await authChannel.send({
+            embeds: [authEmbed]
+        });
+        msgupdatedata.authmsg.msgobj = newMsg;
+        msgupdatedata.authmsg.isSent = true;
+    } else {
+        msgupdatedata.authmsg.msgobj.delete();
+        var newMsg = await authChannel.send({
+            embeds: [authEmbed]
+        });
+        msgupdatedata.authmsg.msgobj = newMsg;
+    }
+}
+
 client.on('messageCreate', async message => {
     const content = message.content;
     const contentArr = content.split(" ");
     const command = contentArr[0];
+
+    if (message.channel.id === '882144291818983485') {
+        if (message.member.id !== '881485487506849792')
+        if (command !== '!인증')
+        await authMsgUpdate();
+    }
 
     if (command === '!돌') {
         var Values = {
@@ -1028,6 +1073,8 @@ client.on('messageCreate', async message => {
                 embeds: [userembed]
             });
         }
+
+        await authMsgUpdate();
     } else if (command === '!유저') {
         const Keyword = message.content.substring(4, message.content.length);
         const encodeNickName = encodeURI(Keyword);
