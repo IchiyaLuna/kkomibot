@@ -100,7 +100,11 @@ var MusicData = {
 
 var LastConnection;
 
-const MusicPlayer = createAudioPlayer();
+const MusicPlayer = createAudioPlayer({
+    behaviors: {
+        noSubscriber: NoSubscriberBehavior.Play,
+    },
+});
 
 MusicPlayer.on('stateChange', (oldState, newState) => {
     console.log(`Audio player transitioned from ${oldState.status} to ${newState.status}`);
@@ -161,6 +165,7 @@ async function processQueue() {
         return processQueue();
     }
 }
+
 async function playMusic(connection, message) {
     const voicechannel = message.member.voice.channel;
 
@@ -580,7 +585,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
 
-            RaidEmbed.addField("클리어 골드", `700 ${gold} / 800 ${gold} (**총 1,500** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `500 ${gold} / 600 ${gold} (**총 1,100** ${gold})`);
 
             RaidEmbed.addField("노을빛 비늘", "4개 / 4개 (총 8개)", true);
             RaidEmbed.addField("빛나는 발톱", "10개 / 10개 (총 20개)", true);
@@ -594,7 +599,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[하드] 난이도**', "아이라의 눈 (세토) / 오레하 프라바사 (알비온)");
 
-            RaidEmbed.addField("클리어 골드", `800 ${gold} / 900 ${gold} (**총 1,700** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `600 ${gold} / 700 ${gold} (**총 1,300** ${gold})`);
 
             RaidEmbed.addField("노을빛 비늘", "8개 / 16개 (총 24개)", true);
             RaidEmbed.addField("빛나는 발톱", "20개 / 40개 (총 60개)", true);
@@ -615,7 +620,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `1,500 ${gold} / 800 ${gold} / 1,000 ${gold} (**총 3,300** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `700 ${gold} / 400 ${gold} / 500 ${gold} (**총 1,600** ${gold})`);
 
             RaidEmbed.addField("아르고스의 어금니", "6개 / 2개 / 1개 (총 9개)", true);
             RaidEmbed.addField("아르고스의 발톱", "16개 / 5개 / 2개 (총 23개)", true);
@@ -634,7 +639,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도 (1415)**', "1 페이즈 개수 / 2 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `800 ${gold} / 2,500 ${gold} (**총 3,300** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `500 ${gold} / 2,000 ${gold} (**총 2,500** ${gold})`);
 
             RaidEmbed.addField("마수의 힘줄", "2개 / 3개 (총 5개)", true);
             RaidEmbed.addField("마수의 뼈", "1개 / 2개 (총 3개)", true);
@@ -657,7 +662,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도 (1430)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `500 ${gold} / 600 ${gold} / 2,200 ${gold} (**총 3,300** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `500 ${gold} / 600 ${gold} / 1,400 ${gold} (**총 2,500** ${gold})`);
 
             RaidEmbed.addField("욕망의 송곳니", "1개 / 1개 / 3개 (총 5개)", true);
             RaidEmbed.addField("욕망의 날개", "0개 / 1개 / 2개 (총 3개)", true);
@@ -668,7 +673,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[하드] 난이도 (1460)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `500 ${gold} / 1,000 ${gold} / 3,000 ${gold} (**총 4,500** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `1,000 ${gold} / 1,000 ${gold} / 2,500 ${gold} (**총 4,500** ${gold})`);
 
             RaidEmbed.addField("욕망의 날개", "1개 / 2개 / 2개 (총 5개)");
 
@@ -680,7 +685,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도 (1475)**', "1 페이즈 개수 / 2 페이즈 개수 / 3 페이즈 개수");
 
-            RaidEmbed.addField("클리어 골드", `500 ${gold} / 1,000 ${gold} / 3,000 ${gold} (**총 4,500** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `1,000 ${gold} / 1,000 ${gold} / 2,500 ${gold} (**총 4,500** ${gold})`);
 
             RaidEmbed.addField("광기의 나팔", "1개 / 2개 / 2개 (총 5개)");
 
@@ -692,7 +697,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[노말] 난이도 (1490/1500/1520)**', "1-2 페이즈(1490) 개수 / 3-4 페이즈(1500) 개수 / 5-6 페이즈(1520) 개수");
 
-            RaidEmbed.addField("클리어 골드", `4,500 ${gold} / 1,500 ${gold} / 1,500 ${gold} (**총 7,500** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `4,500 ${gold} / 1,500 ${gold} / 2,500 ${gold} (**총 8,500** ${gold})`);
 
             RaidEmbed.addField("몽환의 뿔", "7개 / 7개 / 8개 (총 22개)");
             RaidEmbed.addField("경매 보상 (장비 재료만)", "몽환의 뿔 5개 / 몽환의 뿔 5개 / 몽환의 뿔 5개");
@@ -702,7 +707,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField('**[하드] 난이도 (1540/1550/1560)**', "1-2 페이즈(1540) 개수 / 3-4 페이즈(1550) 개수 / 5-6 페이즈(1560) 개수");
 
-            RaidEmbed.addField("클리어 골드", `5,500 ${gold} / 2,000 ${gold} / 2,000 ${gold} (**총 9,500** ${gold})`);
+            RaidEmbed.addField("클리어 골드", `5,500 ${gold} / 2,000 ${gold} / 3,000 ${gold} (**총 10,500** ${gold})`);
 
             RaidEmbed.addField("몽환의 사념", "7개 / 7개 / 8개 (총 22개)");
 
