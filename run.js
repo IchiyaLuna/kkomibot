@@ -644,7 +644,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("마수의 힘줄", "2개 / 3개 (총 5개)", true);
             RaidEmbed.addField("마수의 뼈", "1개 / 2개 (총 3개)", true);
 
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 힘줄 2개, 뼈 1개\n2 페이즈 (<:crystal:886884143198265345> 150) 힘줄 3개, 뼈 1개\n(총 뼈 2개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1 페이즈 (500 ${gold}) 힘줄 3개, 뼈 1개\n2 페이즈 (800 ${gold}) 힘줄 3개, 뼈 2개\n(총 뼈 3개)`);
 
             RaidEmbed.addField("-----------------------------", "\u200b");
 
@@ -655,7 +655,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("마수의 뼈", "2개 / 3개 (총 5개)", true);
 
             RaidEmbed.addField("경매 보상 (장비 재료만)", "마수의 뼈 5개");
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 100) 뼈 2개\n2 페이즈 (<:crystal:886884143198265345> 150) 뼈 3개\n(총 5개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1 페이즈 (900 ${gold}) 뼈 3개\n2 페이즈 (1,200 ${gold}) 뼈 3개\n(총 6개)`);
             break;
         case 3:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1430 / 하드 : 1460');
@@ -667,7 +667,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("욕망의 송곳니", "1개 / 1개 / 3개 (총 5개)", true);
             RaidEmbed.addField("욕망의 날개", "0개 / 1개 / 2개 (총 3개)", true);
 
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 송곳니 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 송곳니 1개, 날개 1개\n3 페이즈 (<:crystal:886884143198265345> 120) 송곳니 3개, 날개 1개\n(총 날개 2개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1 페이즈 (400 ${gold}) 송곳니 1개, 날개 1개\n2 페이즈 (600 ${gold}) 송곳니 1개, 날개 1개\n3 페이즈 (800 ${gold}) 송곳니 3개, 날개 1개\n(총 날개 3개)`);
 
             RaidEmbed.addField("-----------------------------", "\u200b");
 
@@ -678,7 +678,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("욕망의 날개", "1개 / 2개 / 2개 (총 5개)");
 
             RaidEmbed.addField("경매 보상 (장비 재료만)", "욕망의 날개 5개");
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 날개 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 날개 2개\n3 페이즈 (<:crystal:886884143198265345> 120) 날개 2개\n(총 날개 5개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1 페이즈 (700 ${gold}) 날개 2개\n2 페이즈 (900 ${gold}) 날개 2개\n3 페이즈 (1,200 ${gold}) 날개 2개\n(총 날개 6개)`);
             break;
         case 4:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1475 / 하드 : ???');
@@ -690,7 +690,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("광기의 나팔", "1개 / 2개 / 2개 (총 5개)");
 
             RaidEmbed.addField("경매 보상 (장비 재료만)", "광기의 나팔 5개");
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1 페이즈 (<:crystal:886884143198265345> 50) 나팔 1개\n2 페이즈 (<:crystal:886884143198265345> 80) 나팔 2개\n3 페이즈 (<:crystal:886884143198265345> 120) 나팔 2개\n(총 나팔 5개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1 페이즈 (800 ${gold}) 나팔 1개\n2 페이즈 (1,000 ${gold}) 나팔 2개\n3 페이즈 (1,300 ${gold}) 나팔 2개\n(총 나팔 5개)`);
             break;
         case 5:
             RaidEmbed.addField('**입장 레벨**', '노말 : 1490/1500/1520 / 하드 : 1540/1550/1560');
@@ -701,7 +701,7 @@ async function RaidInfo(RaidName) {
 
             RaidEmbed.addField("몽환의 뿔", "7개 / 7개 / 8개 (총 22개)");
             RaidEmbed.addField("경매 보상 (장비 재료만)", "몽환의 뿔 5개 / 몽환의 뿔 5개 / 몽환의 뿔 5개");
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1-2 페이즈 (<:crystal:886884143198265345> 50) 뿔 7개\n3-4 페이즈 (<:crystal:886884143198265345> 80) 뿔 7개\n5-6 페이즈 (<:crystal:886884143198265345> 120) 뿔 8개\n(총 뿔 22개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1-2 페이즈 (1,000 ${gold}) 뿔 7개\n3-4 페이즈 (1,500 ${gold}) 뿔 7개\n5-6 페이즈 (? ${gold}) 뿔 8개\n(총 뿔 22개)`);
 
             RaidEmbed.addField("-----------------------------", "\u200b");
 
@@ -712,7 +712,7 @@ async function RaidInfo(RaidName) {
             RaidEmbed.addField("몽환의 사념", "7개 / 7개 / 8개 (총 22개)");
 
             RaidEmbed.addField("경매 보상 (장비 재료만)", "몽환의 사념 5개 / 몽환의 사념 5개 / 몽환의 사념 5개");
-            RaidEmbed.addField("더보기 보상 (장비 재료만)", "1-2 페이즈 (<:crystal:886884143198265345> 100) 사념 7개\n3-4 페이즈 (<:crystal:886884143198265345> 130) 사념 7개\n5-6 페이즈 (<:crystal:886884143198265345> 200) 사념 8개\n(총 사념 22개)");
+            RaidEmbed.addField("더보기 보상 (장비 재료만)", `1-2 페이즈 (1,500 ${gold}) 사념 7개\n3-4 페이즈 (2,000 ${gold}) 사념 7개\n5-6 페이즈 (<? ${gold}) 사념 8개\n(총 사념 22개)`);
             break;
         default:
             raidname = "오류";
