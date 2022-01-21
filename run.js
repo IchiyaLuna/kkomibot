@@ -123,6 +123,8 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
+        if (playdl.yt_validate(url) !== 'video') throw new Error('올바르지 않은 유튜브 영상!');
+
         let source = await playdl.stream(nextTrack.url);
 
         const resource = createAudioResource(source.stream, {
@@ -133,7 +135,7 @@ async function processQueue() {
 
         const nowplaying = new MessageEmbed()
             .setColor('#c4302b')
-            .setTitle(`지금 재생중 - ${nextTrack.title}`)
+            .setTitle(`지금 재생중 - ${nextTrack.title} (${nextTrack.duration})`)
             .setDescription(`${nextTrack.desc}`)
             .setImage(nextTrack.thumbnail)
             .setTimestamp()
@@ -174,6 +176,8 @@ async function playMusic(connection, message) {
             const nextTrack = MusicData.queue.shift();
 
             try {
+                if (playdl.yt_validate(url) !== 'video') throw new Error('올바르지 않은 유튜브 영상!');
+
                 let source = await playdl.stream(nextTrack.url);
 
                 const resource = createAudioResource(source.stream, {
@@ -201,7 +205,7 @@ async function playMusic(connection, message) {
 
             const nowplaying = new MessageEmbed()
                 .setColor('#c4302b')
-                .setTitle(`지금 재생중 - ${nextTrack.title}`)
+                .setTitle(`지금 재생중 - ${nextTrack.title} (${nextTrack.duration})`)
                 .setDescription(`${nextTrack.desc}`)
                 .setImage(nextTrack.thumbnail)
                 .setTimestamp()
@@ -231,19 +235,37 @@ async function playMusic(connection, message) {
 
         const nextTrack = MusicData.queue.shift();
 
-        let source = await playdl.stream(nextTrack.url);
+        try{
+            if (playdl.yt_validate(url) !== 'video') throw new Error('올바르지 않은 유튜브 영상!');
 
-        const resource = createAudioResource(source.stream, {
-            inputType: source.type
-        });
+            let source = await playdl.stream(nextTrack.url);
+    
+            const resource = createAudioResource(source.stream, {
+                inputType: source.type
+            });
+    
+            MusicPlayer.play(resource);
 
-        MusicPlayer.play(resource);
+            connection.subscribe(MusicPlayer);
+        } catch (error) {
+            const errormusic = new MessageEmbed()
+                    .setColor('#c4302b')
+                    .setTitle(`재생 실패 - ${nextTrack.title}`)
+                    .setDescription('무언가 문제가 있었나봐요!')
+                    .setTimestamp()
+                    .setFooter('꼬미봇 플레이어 - 꼬미봇 by 아뀨');
 
-        connection.subscribe(MusicPlayer);
+                nextTrack.message.channel.send({
+                    embeds: [errormusic]
+                });
 
+                console.log(error);
+                return;
+        }
+        
         const nowplaying = new MessageEmbed()
             .setColor('#c4302b')
-            .setTitle(`지금 재생중 - ${nextTrack.title}`)
+            .setTitle(`지금 재생중 - ${nextTrack.title} (${nextTrack.duration})`)
             .setDescription(`${nextTrack.desc}`)
             .setImage(nextTrack.thumbnail)
             .setTimestamp()
@@ -255,7 +277,7 @@ async function playMusic(connection, message) {
     } else {
         const queueembed = new MessageEmbed()
             .setColor('#c4302b')
-            .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title}`)
+            .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title} (${nextTrack.duration})`)
             .setDescription(`${MusicData.queue[MusicData.queue.length - 1].desc}`)
             .setImage(MusicData.queue[MusicData.queue.length - 1].thumbnail)
             .setTimestamp()
@@ -968,6 +990,10 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+async function big_data() {
+
+}
+
 var msgupdatedata = {
     authmsg: {
         isSent: false,
@@ -1304,6 +1330,7 @@ client.on('messageCreate', async message => {
             var urls = [];
             var embedcontent = "";
 
+            /*
             const videos = await youtube.searchVideos(searchkeyword, 5);
 
             if (videos.length < 5) return message.channel.send('충분한 노래를 검색하지 못했습니다.');
@@ -1311,6 +1338,17 @@ client.on('messageCreate', async message => {
             for (let i = 0; i < videos.length; i++) {
                 urls[i] = videos[i].url;
                 embedcontent += `**${i + 1} :** ${videos[i].title}\n`;
+            }
+            */
+
+            const videos = await playdl.search(searchkeyword, {source : {youtube : "video"}, limit : 5 });
+
+            for (let i = 0; i < videos.length; i++) {
+                var seconds = videos[i].durationInSec;
+                var hour = parseInt(seconds / 3600) < 10 ? '0' + parseInt(seconds / 3600) : parseInt(seconds / 3600);
+                var min = parseInt((seconds % 3600) / 60) < 10 ? '0' + parseInt((seconds % 3600) / 60) : parseInt((seconds % 3600) / 60);
+                var sec = seconds % 60 < 10 ? '0' + seconds % 60 : seconds % 60;
+                embedcontent += `**${i + 1} :** ${videos[i].title} *(${hour}:${min}:${sec})\n`;
             }
 
             const musicselectembed = new MessageEmbed()
@@ -1342,15 +1380,23 @@ client.on('messageCreate', async message => {
                             if (selectnum >= 1 && selectnum <= 5) {
 
                                 const index = selectnum - 1;
-                                const url = urls[index];
+                                const url = videos[index].url;
                                 const title = videos[index].title;
                                 const desc = videos[index].description;
-                                const thumbnail = videos[index].thumbnails.high.url;
+                                const thumbnail = videos[index].thumbnails[0].url;
+
+                                var seconds = videos[index].durationInSec;
+                                var hour = parseInt(seconds / 3600) < 10 ? '0' + parseInt(seconds / 3600) : parseInt(seconds / 3600);
+                                var min = parseInt((seconds % 3600) / 60) < 10 ? '0' + parseInt((seconds % 3600) / 60) : parseInt((seconds % 3600) / 60);
+                                var sec = seconds % 60 < 10 ? '0' + seconds % 60 : seconds % 60;
+
+                                const duration = `${hour}:${min}:${sec}`;
 
                                 const songdata = {
                                     url,
                                     title,
                                     desc,
+                                    duration,
                                     thumbnail,
                                     message,
                                     voicechannel
@@ -1415,7 +1461,7 @@ client.on('messageCreate', async message => {
 
         if (!isEmpty(MusicData.queue[0])) {
             for (let i = 0; i < MusicData.queue.length; i++) {
-                queuestr += `**${i + 1} : ${MusicData.queue[i].title}**\n`;
+                queuestr += `**${i + 1} : ${MusicData.queue[i].title} (${MusicData.queue[i].duration})**\n`;
             }
 
             const queueembed = new MessageEmbed()
