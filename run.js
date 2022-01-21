@@ -1036,7 +1036,7 @@ async function big_data(percent) {
     }
 
     const ResultEmbed = new MessageEmbed()
-                .setColor('#464964')
+                .setColor('#ffd700')
                 .setTitle('꼬미의 예측')
                 .setDescription(`주어진 확률 ${percent}%는 성공할까요?!\n100명의 꼬미에게 물어봤어요...`)
                 .addField(`성공이라고 생각하는 꼬미`, `${success}명`)
