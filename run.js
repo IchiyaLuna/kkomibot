@@ -1393,7 +1393,7 @@ client.on('messageCreate', async message => {
 
                                 const info = await playdl.video_basic_info(url);
 
-                                const desc = info.video_details.description;
+                                const desc = truncate(info.video_details.description, 160);
                                 const thumbnail = videos[index].thumbnail.url;
 
                                 var seconds = videos[index].durationInSec;
