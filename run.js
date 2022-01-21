@@ -1383,7 +1383,7 @@ client.on('messageCreate', async message => {
                                 const url = videos[index].url;
                                 const title = videos[index].title;
                                 const desc = videos[index].description;
-                                const thumbnail = videos[index].thumbnail;
+                                const thumbnail = videos[index].thumbnail.url;
 
                                 var seconds = videos[index].durationInSec;
                                 var hour = parseInt(seconds / 3600) < 10 ? '0' + parseInt(seconds / 3600) : parseInt(seconds / 3600);
