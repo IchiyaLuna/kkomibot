@@ -1390,7 +1390,10 @@ client.on('messageCreate', async message => {
                                 const index = selectnum - 1;
                                 const url = videos[index].url;
                                 const title = videos[index].title;
-                                const desc = videos[index].description;
+
+                                const info = await playdl.video_basic_info(url);
+
+                                const desc = info.video_details.description;
                                 const thumbnail = videos[index].thumbnail.url;
 
                                 var seconds = videos[index].durationInSec;
