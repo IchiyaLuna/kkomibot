@@ -997,8 +997,52 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-async function big_data() {
+async function big_data(percent) {
+ 
+    var success = 0;
+    var fail = 0;
 
+    var isSuccess = [];
+
+    for (let i = 0; i < 100; i++) {
+        if (Math.random() * 100 < percent) success++;
+        else fail++;
+    }
+
+    const randomAnswer = Math.floor(Math.random() * 5);
+
+    if (success > fail) {
+        isSuccess[0] = "어쩐지 성공할 거 같다...";
+        isSuccess[1] = "가능성이 보인다!";
+        isSuccess[2] = "이건 될 거 같다!!";
+        isSuccess[3] = "지금이 기회야!";
+        isSuccess[4] = "괜찮을지도!?";
+    } else if (success < fail) {
+        isSuccess[0] = "조금... 힘들지도";
+        isSuccess[1] = "나중에 하는게...";
+        isSuccess[2] = "이건 좀 아니다!";
+        isSuccess[3] = "어려울 거 같아...";
+        isSuccess[4] = "억까 멈춰!";
+    } else {
+        isSuccess[0] = "몰?루겠어요";
+        isSuccess[1] = "딱 반반이라니...";
+        isSuccess[2] = "난 몰라!!";
+        isSuccess[3] = "꼬미를 홀수로 부를걸...";
+        isSuccess[4] = "너네 짰지!!";
+    }
+
+    const ResultEmbed = new MessageEmbed()
+                .setColor('#464964')
+                .setTitle('꼬미의 예측')
+                .setDescription(`주어진 확률 ${percent}%은 성공할까요?!\n100명의 꼬미에게 물어봤어요...`)
+                .addField(`성공이라고 생각하는 꼬미`, `${success}명`)
+                .addField(`실패라고 생각하는 꼬미`, `${fail}}명`)
+                .addField(`꼬미의 한 마디`, isSuccess[randomAnswer])
+                .setTimestamp()
+                .setFooter('꼬미봇 세공기 - 꼬미봇 by 아뀨');
+
+
+    return ResultEmbed;
 }
 
 var msgupdatedata = {
@@ -1170,6 +1214,16 @@ client.on('messageCreate', async message => {
         });
 
         client[reply.id] = Values;
+    } else if (command === '!확률') {
+    
+        const percentInput = parseInt(message.content.substring(4, message.content.length));
+        if (percentInput > 100 || percentInput < 0) {
+            await message.channel.send("0과 100 사이의 확률만 입력해줘!");
+        } else {
+            await message.channel.send({
+                embeds: [big_data(percentInput)]
+            });
+        }
     } else if (command === '!공지') {
         if (message.member.roles.cache.has('882486032841453678')) {
             let today = new Date();
