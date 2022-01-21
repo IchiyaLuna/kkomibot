@@ -123,8 +123,6 @@ async function processQueue() {
     const nextTrack = MusicData.queue.shift();
 
     try {
-        if (playdl.validate(nextTrack.url) !== 'yt_video') throw new Error('올바르지 않은 유튜브 영상!');
-
         let source = await playdl.stream(nextTrack.url);
 
         const resource = createAudioResource(source.stream, {
@@ -176,8 +174,6 @@ async function playMusic(connection, message) {
             const nextTrack = MusicData.queue.shift();
 
             try {
-                if (playdl.validate(nextTrack.url) !== 'yt_video') throw new Error('올바르지 않은 유튜브 영상!');
-
                 let source = await playdl.stream(nextTrack.url);
 
                 const resource = createAudioResource(source.stream, {
@@ -236,8 +232,6 @@ async function playMusic(connection, message) {
         const nextTrack = MusicData.queue.shift();
 
         try{
-            if (playdl.validate(nextTrack.url) !== 'yt_video') throw new Error('올바르지 않은 유튜브 영상!');
-
             let source = await playdl.stream(nextTrack.url);
     
             const resource = createAudioResource(source.stream, {
