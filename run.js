@@ -262,7 +262,7 @@ async function playMusic(connection, message) {
                 console.log(error);
                 return;
         }
-        
+
         const nowplaying = new MessageEmbed()
             .setColor('#c4302b')
             .setTitle(`지금 재생중 - ${nextTrack.title} (${nextTrack.duration})`)
@@ -1383,7 +1383,7 @@ client.on('messageCreate', async message => {
                                 const url = videos[index].url;
                                 const title = videos[index].title;
                                 const desc = videos[index].description;
-                                const thumbnail = videos[index].thumbnails[0].url;
+                                const thumbnail = videos[index].thumbnail;
 
                                 var seconds = videos[index].durationInSec;
                                 var hour = parseInt(seconds / 3600) < 10 ? '0' + parseInt(seconds / 3600) : parseInt(seconds / 3600);
