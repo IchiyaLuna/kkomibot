@@ -271,7 +271,7 @@ async function playMusic(connection, message) {
     } else {
         const queueembed = new MessageEmbed()
             .setColor('#c4302b')
-            .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title} (${nextTrack.duration})`)
+            .setTitle(`재생 예약됨 - ${MusicData.queue[MusicData.queue.length - 1].title} (${MusicData.queue[MusicData.queue.length - 1].duration})`)
             .setDescription(`${MusicData.queue[MusicData.queue.length - 1].desc}`)
             .setImage(MusicData.queue[MusicData.queue.length - 1].thumbnail)
             .setTimestamp()
@@ -1342,7 +1342,8 @@ client.on('messageCreate', async message => {
                 var hour = parseInt(seconds / 3600) < 10 ? '0' + parseInt(seconds / 3600) : parseInt(seconds / 3600);
                 var min = parseInt((seconds % 3600) / 60) < 10 ? '0' + parseInt((seconds % 3600) / 60) : parseInt((seconds % 3600) / 60);
                 var sec = seconds % 60 < 10 ? '0' + seconds % 60 : seconds % 60;
-                embedcontent += `**${i + 1} :** ${videos[i].title} *(${hour}:${min}:${sec})\n`;
+                var newtitle = truncate(videos[i].title, 30);
+                embedcontent += `**${i + 1} :** ${newtitle} *(${hour}:${min}:${sec})*\n`;
             }
 
             const musicselectembed = new MessageEmbed()
