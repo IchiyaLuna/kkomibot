@@ -1220,8 +1220,11 @@ client.on('messageCreate', async message => {
         if (percentInput > 100 || percentInput < 0) {
             await message.channel.send("0과 100 사이의 확률만 입력해줘!");
         } else {
+
+            const embed = await big_data(percentInput);
+
             await message.channel.send({
-                embeds: [big_data(percentInput)]
+                embeds: [embed]
             });
         }
     } else if (command === '!공지') {
